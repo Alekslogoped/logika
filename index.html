@@ -35,6 +35,14 @@ html,body{height:100%;overflow:hidden}.app{width:100%;height:100svh;min-height:0
 @keyframes summer-glint{0%,100%{opacity:0;transform:scaleX(.65)}45%{opacity:.55;transform:scaleX(1.15)}}
 @keyframes boat-ripple{from{transform:scale(.8);opacity:.5}to{transform:scale(1.35,1.7);opacity:0}}
 @media(prefers-reduced-motion:reduce){.summer-current,.glint,.game.sailing .boat::before{animation:none!important;opacity:.12}}
+
+/* Прозрачный низ и переправа выше, в более узкой части реки. */
+.bottom{background:transparent;border:0;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+.bottom .message{font-weight:650;text-shadow:0 1px 3px #fff,0 0 10px #ffffffb3}
+.boat{left:35%;top:61%}.boat.right{left:66%}
+@media(max-width:680px){.boat{left:36%;top:66%}.boat.right{left:64%}.shore{top:39%;height:24%}}
+@media(max-height:650px) and (min-width:681px){.boat{top:62%}}
+@media(max-height:650px) and (max-width:680px){.boat{top:66%}.shore{top:41%;height:21%}}
 </style>
 </head>
 <body>
