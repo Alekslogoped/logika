@@ -43,6 +43,9 @@ html,body{height:100%;overflow:hidden}.app{width:100%;height:100svh;min-height:0
 @media(max-width:680px){.boat{left:36%;top:66%}.boat.right{left:64%}.shore{top:39%;height:24%}}
 @media(max-height:650px) and (min-width:681px){.boat{top:62%}}
 @media(max-height:650px) and (max-width:680px){.boat{top:66%}.shore{top:41%;height:21%}}
+
+/* Нос лодки касается кромки воды на обоих берегах, с учётом размера экрана. */
+.boat{left:var(--dock-left,32%)}.boat.right{left:var(--dock-right,70%)}
 </style>
 </head>
 <body>
@@ -221,6 +224,27 @@ function defaultMessage(){
  if(state.selected.length)return 'В лодке: '+state.selected.map(i=>level().cast[i][1].toLowerCase()).join(', ')+'. Можно отправляться!';
  return state.boat===1?'Кого заберём обратно? Можно вернуться одному.':'Выбери пассажира. Мальчик может плыть и один.';
 }
+// Контур берегов на летнем фоне: нормализованные координаты y, левый и правый берег.
+const RIVER_BANKS=[[0.35,0.3882,0.5879],[0.36,0.3882,0.6041],[0.37,0.3852,0.6322],[0.38,0.3882,0.6429],[0.39,0.387,0.6651],[0.4,0.3792,0.6687],[0.41,0.3589,0.6663],[0.42,0.3547,0.6722],[0.43,0.3289,0.6824],[0.44,0.323,0.6932],[0.45,0.3062,0.6914],[0.46,0.3152,0.6854],[0.47,0.3236,0.6806],[0.48,0.326,0.6794],[0.49,0.3278,0.6812],[0.5,0.3283,0.6842],[0.51,0.3283,0.683],[0.52,0.3218,0.6794],[0.53,0.3224,0.6866],[0.54,0.3248,0.6998],[0.55,0.3272,0.7004],[0.56,0.3146,0.7057],[0.57,0.317,0.7267],[0.58,0.3044,0.7327],[0.59,0.3074,0.7512],[0.6,0.3008,0.75],[0.61,0.2626,0.7542],[0.62,0.262,0.7518],[0.63,0.2506,0.75],[0.64,0.2524,0.7584],[0.65,0.2536,0.7715],[0.66,0.2476,0.7715],[0.67,0.2398,0.7847],[0.68,0.2416,0.7972],[0.69,0.2416,0.7871],[0.7,0.2291,0.7949],[0.71,0.1986,0.7943],[0.72,0.1974,0.7919],[0.73,0.1788,0.8038],[0.74,0.1788,0.8158],[0.75,0.1711,0.8164],[0.76,0.1728,0.8283],[0.77,0.1722,0.8397],[0.78,0.1579,0.8559],[0.79,0.1256,0.8553],[0.8,0.1094,0.8541],[0.81,0.1077,0.863],[0.82,0.0969,0.8929],[0.83,0.1029,0.9055],[0.84,0.1059,0.9043],[0.85,0.1112,0.9013],[0.86,0.1232,0.8989],[0.87,0.0861,0.9031],[0.88,0.113,0.9169],[0.89,0.1364,0.9252],[0.9,0.1202,0.9516]];
+function positionDocks(){
+ const scene=$('scene'),hull=$('boat').querySelector('.boat-hull');
+ if(!scene||!hull)return;
+ const sceneBox=scene.getBoundingClientRect(),boat=$('boat');
+ if(!sceneBox.width||!sceneBox.height)return;
+ // Используем размеры до покачивания: точки причаливания остаются неподвижными.
+ const width=hull.clientWidth,height=hull.clientHeight;
+ const scale=Math.min(width/260,height/55),paddingY=(height-55*scale)/2;
+ const hullTop=boat.offsetTop+boat.offsetHeight/2-parseFloat(getComputedStyle(hull).bottom)-height;
+ const y=(hullTop+paddingY+9*scale)/sceneBox.height;
+ const row=Math.max(RIVER_BANKS[0][0],Math.min(RIVER_BANKS[RIVER_BANKS.length-1][0],y));
+ let i=0;while(i<RIVER_BANKS.length-2&&RIVER_BANKS[i+1][0]<row)i++;
+ const a=RIVER_BANKS[i],b=RIVER_BANKS[i+1],t=(row-a[0])/(b[0]-a[0]);
+ const leftBank=(a[1]+(b[1]-a[1])*t)*sceneBox.width,rightBank=(a[2]+(b[2]-a[2])*t)*sceneBox.width;
+ const halfHull=127*scale,contact=3;
+ scene.style.setProperty('--dock-left',(leftBank+halfHull-contact)+'px');
+ scene.style.setProperty('--dock-right',(rightBank-halfHull+contact)+'px');
+}
+window.addEventListener('resize',()=>requestAnimationFrame(positionDocks),{passive:true});
 function render(){
  document.querySelector('.game').classList.toggle('sailing',busy);
  $('chaseLayer').replaceChildren();$('lossPanel').hidden=state.status!=='lost';
@@ -242,6 +266,7 @@ function render(){
   b.setAttribute('aria-label',i===undefined?'Свободное место':c.cast[i][1]+' — высадить из лодки');
   if(i!==undefined)b.addEventListener('click',()=>togglePassenger(i));$('crew').append(b);
  }
+ positionDocks();
  $('boatLabel').textContent=busy?'Переправа…':state.selected.length+' / '+c.capacity+' пассажиров';
  $('message').textContent=note||defaultMessage();
  $('undo').disabled=busy||!history.length;
