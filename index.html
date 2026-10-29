@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Переправа — пять приключений</title>
+<link rel="preload" as="image" href="assets/characters/fox.webp">
+<link rel="preload" as="image" href="assets/characters/hen.webp">
+<link rel="preload" as="image" href="assets/characters/grain.webp">
 <style>
 :root{--ink:#243f63;--blue:#307baf;--soft:#e8f4fa;--line:#b3d3e5;--white:#fff;--shadow:0 12px 32px #26476c12}
 *{box-sizing:border-box}body{margin:0;background:#e8f1f8;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}button:disabled{cursor:default;opacity:.45}button:focus-visible{outline:3px solid #ec9a29;outline-offset:3px}button{transition:background .15s,transform .15s}button:not(:disabled):active{transform:scale(.96)}
@@ -109,7 +112,13 @@ const ART={
  '🥕':'<path d="M57 34Q48 5 61 4L65 24Q75 2 82 10L73 30Q96 17 95 29L72 42Z" fill="#79a883"/><path d="M62 30Q87 34 78 54L24 96Q16 100 20 88L43 39Q48 27 62 30Z" fill="#e8a05d" stroke="#ca8146" stroke-width="2"/><path d="M46 45L57 50M35 64L45 69M62 65L69 68M26 83L32 86" stroke="#c87f48" stroke-width="3" stroke-linecap="round"/>',
  '🧑‍🦱':'<path d="M18 99V83Q20 68 50 68Q80 68 82 83V99Z" fill="#446f95"/><path d="M43 69L50 82L57 69" fill="#e4b886"/><circle cx="50" cy="42" r="27" fill="#edc6a0"/><path d="M23 36Q20 8 50 8Q80 8 77 36" fill="#698ca4"/><path d="M22 33H78V42H22Z" fill="#a0bdcc"/><circle cx="50" cy="8" r="8" fill="#dce9ef"/><circle cx="40" cy="49" r="2.5" fill="#283c55"/><circle cx="60" cy="49" r="2.5" fill="#283c55"/><path d="M43 60Q50 65 57 60" fill="none" stroke="#ad7760" stroke-width="2" stroke-linecap="round"/>'
 };
-function icon(emoji){return ART[emoji]?'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="1em" height="1em" style="vertical-align:middle" aria-hidden="true">'+ART[emoji]+'</svg>':emoji;}
+// Каждый герой и предмет — самостоятельная картинка с прозрачным фоном.
+const CHARACTER_FILES={'🦊':'fox','🐔':'hen','🌾':'grain','🐱':'cat','🐭':'mouse','🧀':'cheese','🐰':'rabbit-gray','🥕':'carrot','🐺':'wolf'};
+function icon(emoji){
+ const file=CHARACTER_FILES[emoji];
+ if(file)return '<svg class="painted-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em" style="vertical-align:middle;overflow:visible" aria-hidden="true"><image href="assets/characters/'+file+'.webp" x="0" y="0" width="512" height="512" preserveAspectRatio="xMidYMid meet"/></svg>';
+ return ART[emoji]?'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="1em" height="1em" style="vertical-align:middle" aria-hidden="true">'+ART[emoji]+'</svg>':emoji;
+}
 const $ = id => document.getElementById(id);
 let levelIndex=0, state, history=[], busy=false, highlighted=[], note='', animationToken=0;
 let soundEnabled=true,audioContext=null,soundNodes=[];
