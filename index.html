@@ -19,14 +19,21 @@ dialog{border:1px solid #cfdfeb;border-radius:25px;padding:24px;width:min(520px,
 @media(max-height:550px) and (min-width:681px){.app{padding:7px 16px;gap:6px}.brand{font-size:20px}.brand small{display:none}.level{padding:5px 10px}.game-info{padding:6px 14px}.scene{height:250px}.bottom{padding:8px 14px}.action{padding:10px 16px}.passenger .emoji{font-size:43px}.passenger .name{margin-top:0;font-size:11px}.boat{top:69%;height:106px;width:180px}.driver{font-size:35px}.seat{width:40px;height:43px;font-size:31px}.under{font-size:10px}}
 @media(max-height:700px) and (min-width:681px){.scene{height:clamp(240px,43vh,300px)}.app{gap:8px;padding-top:12px;padding-bottom:10px}}
 @media(max-width:680px){.shore{top:24%;height:42%}.boat{top:76%}}
+/* Все элементы интерфейса находятся на увеличенном игровом поле. */
+html,body{height:100%;overflow:hidden}.app{width:100%;height:100svh;min-height:0;padding:10px;display:block}.game{width:100%;height:100%;border-radius:26px;isolation:isolate}.scene{position:absolute;inset:0;height:auto!important;z-index:0}.top,.levels,.game-info,.bottom{position:absolute;z-index:10}.top{top:18px;left:24px;right:24px}.brand{font-size:28px}.brand small{font-size:12px}.tools{align-items:center}.tool{backdrop-filter:blur(12px);white-space:nowrap}.levels{top:81px;left:24px;right:24px}.level-title{background:#f6fbffb8;border-radius:14px;padding:6px 12px;backdrop-filter:blur(12px)}.game-info{top:145px;left:24px;right:24px;border-radius:18px;padding:10px 14px;background:#ffffffbd;backdrop-filter:blur(12px)}.danger-pill{font-size:23px}.bottom{bottom:18px;left:24px;right:24px;border:1px solid #fff;border-radius:22px;padding:12px 16px;background:#ffffffc9;backdrop-filter:blur(12px)}.message{font-size:15px;max-width:760px}.under{display:none}.bank-label{top:34%;font-size:12px}.shore{top:41%;height:38%;width:29%}.passenger{max-height:174px}.passenger .emoji{font-size:clamp(60px,8.6vw,112px)}.passenger .name{font-size:15px}.passenger:disabled{opacity:1}.boat{top:74%;width:clamp(210px,25vw,350px);height:150px}.boat-hull{height:57px}.crew{bottom:49px}.driver{font-size:clamp(46px,5.4vw,74px)}.seat{width:clamp(48px,5.2vw,75px);height:clamp(51px,5.5vw,78px);font-size:clamp(39px,4.7vw,65px)}.boat-label{font-size:12px;background:#f5fbffcc;border-radius:12px;width:max-content;min-width:120px;left:50%;transform:translateX(-50%);padding:3px 8px}.sound-icon{width:19px;height:19px;vertical-align:middle}.sound-label{margin-left:5px}.driver.panic{position:relative;animation:panic .28s ease-in-out infinite}.driver.panic::after{content:'У-у-у!';position:absolute;bottom:100%;left:50%;transform:translateX(-50%) rotate(-7deg);white-space:nowrap;background:#fff6e8;border:2px solid #e5c699;border-radius:13px;padding:5px 9px;color:#8d6444;font-size:15px;font-weight:850}.chase-layer{position:absolute;inset:0;pointer-events:none;z-index:6}.chase-actor{position:absolute;text-align:center;line-height:1;filter:drop-shadow(0 6px 5px #3a536a24)}.chase-actor .runner{width:100%;height:100%}.chase-actor .name{position:absolute;top:100%;left:50%;transform:translateX(-50%);font-size:14px;white-space:nowrap;font-weight:750;background:#ffffffd9;padding:4px 9px;border-radius:12px}.chase-puff{position:absolute;font-size:34px;color:#c78e54;transform:translate(-50%,-50%)}.chase-puff::before{content:'✦';display:block}.loss-panel{position:absolute;z-index:15;top:43%;left:50%;transform:translate(-50%,-50%);width:min(365px,42%);text-align:center;background:#fff9f0ed;border:2px solid #edcba3;border-radius:24px;padding:23px;box-shadow:0 12px 42px #3f486b20;backdrop-filter:blur(12px)}.loss-panel[hidden]{display:none}.loss-panel h2{font-size:25px;line-height:1.1;margin:0 0 9px}.loss-panel p{font-size:14px;line-height:1.5;margin:0 0 15px}.loss-actions{display:flex;flex-direction:column;gap:10px}.loss-actions .action{min-width:0}.loss-actions .tool{padding:9px}.game.lost .boat-inner{animation:none}.game.lost .driver.panic{animation:none}.game.losing .boat-inner{animation:bob 1.2s ease-in-out infinite}.hint-button{padding:8px 10px;font-size:12px}.passenger .emoji svg,.driver svg{overflow:visible}
+@keyframes panic{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg) translateY(-3px)}}
+@media(max-width:680px){.app{padding:5px}.game{border-radius:19px}.top{top:12px;left:12px;right:12px;gap:6px}.brand{font-size:21px}.brand small{display:none}.tools{gap:4px}.top .tool{font-size:10px;padding:7px 5px}.top .brand{font-size:18px}.sound-label{display:none}.hint-button{position:absolute;right:0;top:45px}.levels{top:61px;left:12px;right:12px;gap:5px}.level{min-width:35px;padding:7px 9px}.level-title{flex-basis:100%;margin-left:0;padding:5px 8px;font-size:12px}.level-title small{font-size:10px}.game-info{top:136px;left:12px;right:12px;padding:8px 10px;gap:6px}.badge{font-size:10px;padding:5px 8px}.danger-list{gap:4px}.danger-pill{font-size:19px;padding:3px 5px}.bank-label{top:33%;font-size:9px}.shore{top:40%;height:28%;width:29%}.passenger{max-height:110px}.passenger .emoji{font-size:clamp(43px,12vw,67px)}.passenger .name{font-size:11px;padding:3px 5px}.boat{top:73%;width:176px;height:122px}.boat-hull{height:47px}.crew{bottom:41px;left:5%;right:5%}.driver{font-size:44px}.seat{min-width:36px;width:41px;height:46px;font-size:34px}.boat-label{font-size:10px}.bottom{bottom:12px;left:12px;right:12px;padding:10px 12px;gap:8px}.message{font-size:12px;min-height:32px}.action{padding:11px 14px;font-size:14px}.driver.panic::after{font-size:11px;padding:3px 6px}.loss-panel{top:36%;width:calc(100% - 40px);padding:15px;border-radius:19px}.loss-panel h2{font-size:22px}.loss-panel p{font-size:12px;margin-bottom:10px}.loss-actions{flex-direction:row;align-items:center}.loss-actions button{flex:1}.loss-actions .tool{font-size:11px}.chase-actor .name{font-size:11px}.hint-button{font-size:10px;padding:6px}}
+@media(max-height:650px){.top{top:10px}.brand{font-size:21px}.brand small{display:none}.levels{top:54px}.level{padding:6px 10px}.game-info{top:105px;padding:7px 10px}.bank-label{top:32%;font-size:10px}.shore{top:39%;height:30%}.passenger .emoji{font-size:clamp(42px,7vw,76px)}.passenger .name{font-size:12px}.boat{top:72%;height:112px;width:210px}.boat-hull{height:43px}.crew{bottom:37px}.driver{font-size:47px}.seat{height:46px;width:48px;font-size:39px}.bottom{bottom:10px;padding:8px 12px}.message{font-size:12px;min-height:28px}.action{padding:9px 14px}.loss-panel{top:43%;padding:14px}.loss-panel h2{font-size:22px}}
+@media(max-height:650px) and (max-width:680px){.levels{top:50px}.level-title{flex-basis:100%;padding:3px 6px}.level-title small{display:none}.game-info{top:116px}.bank-label{top:36%}.shore{top:42%;height:24%}.passenger .emoji{font-size:40px}.passenger .name{font-size:10px}.boat{width:158px;top:72%;height:101px}.driver{font-size:37px}.crew{bottom:34px}.boat-hull{height:40px}.seat{min-width:32px;width:35px;height:39px;font-size:29px}.bottom{gap:5px}.message{font-size:11px}.loss-panel{top:38%}}
+@media(max-width:360px){.top .brand{font-size:13px}.top .tools .tool{font-size:9px;padding:6px 3px}.top .tools{gap:2px}.sound-icon{width:14px;height:14px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 <main class="app">
- <header class="top"><div class="brand">Переправа <small>Пять маленьких приключений</small></div><div class="tools"><button class="tool" id="undo" title="Отменить последнюю переправу">↶ Ход</button><button class="tool" id="reset">↻ Сначала</button><button class="tool" id="rules">? Правила</button></div></header>
- <nav class="levels" id="levels" aria-label="Уровни"></nav>
  <section class="game" aria-label="Игровое поле">
+ <header class="top"><div class="brand">Переправа <small>Пять маленьких приключений</small></div><div class="tools"><button class="tool" id="undo" title="Отменить последнюю переправу">↶ Ход</button><button class="tool" id="reset">↻ Сначала</button><button class="tool" id="rules">? Правила</button><button class="tool" id="sound" aria-label="Выключить звук" aria-pressed="true"><svg class="sound-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9H7L12 5V19L7 15H3Z"/><path class="sound-waves" d="M16 8Q20 12 16 16M19 5Q26 12 19 19"/></svg><span class="sound-label">Звук</span></button><button class="tool hint-button" id="hint">Подсказка</button></div></header>
+ <nav class="levels" id="levels" aria-label="Уровни"></nav>
   <div class="game-info"><div class="trip-info"><span class="badge" id="capacity"></span><span class="badge" id="counter"></span></div><div class="danger-list" id="dangerList" aria-label="Нельзя оставлять вместе без мальчика"></div></div>
   <div class="scene" id="scene">
    <svg class="landscape" viewBox="0 0 1200 500" preserveAspectRatio="none" aria-hidden="true">
@@ -43,11 +50,12 @@ dialog{border:1px solid #cfdfeb;border-radius:25px;padding:24px;width:min(520px,
    <div class="snow"></div><div class="water-shine" aria-hidden="true">〜</div>
    <div class="bank-label left">ОТПРАВЛЕНИЕ</div><div class="bank-label right">ДРУГОЙ БЕРЕГ</div>
    <div class="shore left" id="leftBank" aria-label="Левый берег"></div><div class="shore right" id="rightBank" aria-label="Правый берег"></div>
+   <div class="chase-layer" id="chaseLayer" aria-hidden="true"></div>
    <div class="boat" id="boat" aria-label="Лодка"><div class="boat-inner"><div class="crew" id="crew"></div><svg class="boat-hull" viewBox="0 0 260 55" aria-hidden="true"><path d="M6 7Q130 22 254 7L224 43Q130 60 36 43Z" fill="#b27b58" stroke="#805c48" stroke-width="3"/><path d="M14 12Q130 30 246 12M30 30Q130 47 230 30" fill="none" stroke="#d2a07a" stroke-width="4"/><path d="M5 7Q130 20 255 7" fill="none" stroke="#e1b590" stroke-width="6" stroke-linecap="round"/></svg></div><div class="boat-label" id="boatLabel"></div></div>
   </div>
   <footer class="bottom"><div class="message" id="message" role="status" aria-live="polite"></div><button class="action" id="sail">Плывём →</button></footer>
+  <section class="loss-panel" id="lossPanel" role="region" aria-labelledby="lossTitle" hidden><h2 id="lossTitle">Ой, не получилось!</h2><p id="lossReason"></p><div class="loss-actions"><button class="action" id="retry">Ещё раз</button><button class="tool" id="lossUndo">↶ Вернуть ход</button></div></section>
  </section>
- <div class="under"><span>Нажми на пассажира, чтобы посадить его в лодку.</span><button class="text-btn" id="hint">Подсказка</button></div>
 </main>
 <dialog id="rulesDialog" aria-labelledby="rulesTitle"><div class="dialog-head"><h2 id="rulesTitle">Как играть</h2><button class="close" data-close="rulesDialog" aria-label="Закрыть">×</button></div><div id="rulesBody"></div><div class="dialog-footer"><button class="action" data-close="rulesDialog">Всё понятно</button></div></dialog>
 <dialog id="resultDialog" class="result" aria-labelledby="resultTitle"><div class="result-icon" aria-hidden="true" style="color:#d3a358">★</div><h2 id="resultTitle">Молодец!</h2><p id="resultBody"></p><div class="dialog-footer"><button class="tool" id="replay">Ещё раз</button><button class="action" id="next">Дальше →</button></div><button class="text-btn" data-close="resultDialog" style="margin-top:16px">Посмотреть на героев</button></dialog>
@@ -79,6 +87,57 @@ const ART={
 function icon(emoji){return ART[emoji]?'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="1em" height="1em" style="vertical-align:middle" aria-hidden="true">'+ART[emoji]+'</svg>':emoji;}
 const $ = id => document.getElementById(id);
 let levelIndex=0, state, history=[], busy=false, highlighted=[], note='', animationToken=0;
+let soundEnabled=true,audioContext=null,soundNodes=[];
+const reducedMotion=()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function driverIcon(panic){
+ if(!panic)return icon('🧑‍🦱');
+ const drawing=ART['🧑‍🦱'].replace('<path d="M43 60Q50 65 57 60" fill="none" stroke="#ad7760" stroke-width="2" stroke-linecap="round"/>','<ellipse cx="50" cy="61" rx="5" ry="7" fill="#875849"/><path d="M35 43L43 41M57 41L65 43" stroke="#72534b" stroke-width="2"/>')+'<path d="M24 92Q-2 62 23 28M76 92Q102 62 77 28" fill="none" stroke="#446f95" stroke-width="12" stroke-linecap="round"/><ellipse cx="24" cy="28" rx="7" ry="10" fill="#edc6a0" transform="rotate(-18 24 28)"/><ellipse cx="76" cy="28" rx="7" ry="10" fill="#edc6a0" transform="rotate(18 76 28)"/>';
+ return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true">'+drawing+'</svg>';
+}
+// Короткий комический возглас «у-у, ха-ха» из встроенного синтезатора.
+// Звук разблокируется нажатием «Плывём»; запись и внешние файлы не нужны.
+function prepareAudio(){
+ if(!soundEnabled)return;
+ try{const Context=window.AudioContext||window.webkitAudioContext;if(!Context)return;if(!audioContext)audioContext=new Context();if(audioContext.state==='suspended')audioContext.resume().catch(()=>{});}catch(_){}
+}
+function stopSound(){for(const node of soundNodes){try{node.stop();}catch(_){}try{node.disconnect();}catch(_){}}soundNodes=[];}
+function playPanic(){
+ if(!soundEnabled||!audioContext||audioContext.state!=='running')return;
+ stopSound();
+ try{
+ const ctx=audioContext,base=ctx.currentTime+.03;
+ const syllable=(offset,duration,formants,pitch)=>{
+  const osc=ctx.createOscillator(),amp=ctx.createGain();osc.type='sawtooth';osc.frequency.setValueAtTime(pitch,base+offset);osc.frequency.linearRampToValueAtTime(pitch*.82,base+offset+duration);
+  amp.gain.setValueAtTime(0,base+offset);amp.gain.linearRampToValueAtTime(.07,base+offset+.035);amp.gain.setValueAtTime(.055,base+offset+duration*.7);amp.gain.linearRampToValueAtTime(0,base+offset+duration);
+  formants.forEach((frequency,i)=>{const filter=ctx.createBiquadFilter(),volume=ctx.createGain();filter.type='bandpass';filter.frequency.value=frequency;filter.Q.value=7;volume.gain.value=[1,.65,.25][i];osc.connect(filter);filter.connect(volume);volume.connect(amp);});
+  amp.connect(ctx.destination);osc.start(base+offset);osc.stop(base+offset+duration+.02);soundNodes.push(osc);
+ };
+ syllable(0,.75,[350,850,2200],235);syllable(.92,.19,[800,1250,2600],265);syllable(1.21,.18,[800,1250,2600],235);syllable(1.5,.23,[800,1250,2600],205);
+ }catch(_){/* Ограничение звука в браузере не мешает анимации. */}
+}
+function toggleSound(){soundEnabled=!soundEnabled;if(!soundEnabled)stopSound();else prepareAudio();$('sound').setAttribute('aria-pressed',String(soundEnabled));$('sound').setAttribute('aria-label',soundEnabled?'Выключить звук':'Включить звук');$('sound').querySelector('.sound-waves').style.opacity=soundEnabled?'1':'.15';}
+function failureReason(pair){const i=level().pairs.findIndex(p=>p[0]===pair[0]&&p[1]===pair[1]);return level().reasons[i];}
+function clearEffects(){stopSound();$('chaseLayer').replaceChildren();$('lossPanel').hidden=true;document.querySelectorAll('.passenger').forEach(p=>p.style.visibility='');}
+async function chasePair(pair,animate=true){
+ const layer=$('chaseLayer');layer.replaceChildren();
+ const sceneRect=$('scene').getBoundingClientRect();
+ const makeActor=(i,role)=>{
+  const original=$('scene').querySelector('[data-passenger="'+i+'"]');if(!original)return null;
+  const rect=original.querySelector('.emoji svg').getBoundingClientRect(),actor=document.createElement('div');
+  actor.className='chase-actor '+role;actor.dataset.actor=i;actor.style.cssText='left:'+(rect.left-sceneRect.left)+'px;top:'+(rect.top-sceneRect.top)+'px;width:'+rect.width+'px;height:'+rect.height+'px;font-size:'+rect.width+'px';
+  actor.innerHTML='<div class="runner">'+icon(level().cast[i][0])+'</div><span class="name">'+level().cast[i][1]+'</span>';layer.append(actor);original.style.visibility='hidden';return {actor,rect};
+ };
+ const target=makeActor(pair[1],'target'),runner=makeActor(pair[0],'attacker');if(!target||!runner)return;
+ const dx=target.rect.left-runner.rect.left,dy=target.rect.top-runner.rect.top,distance=Math.hypot(dx,dy)||1;
+ const stopAt=Math.min(runner.rect.width*.82,distance*.48),x=dx*(1-stopAt/distance),y=dy*(1-stopAt/distance);
+ const pose='translate('+x+'px,'+y+'px)';
+ const puff=()=>{const p=document.createElement('div');p.className='chase-puff';p.style.left=(target.rect.left-sceneRect.left+target.rect.width*.35)+'px';p.style.top=(target.rect.top-sceneRect.top+target.rect.height*.6)+'px';layer.append(p);};
+ if(!animate||reducedMotion()){runner.actor.style.transform=pose;puff();return;}
+ const movement=runner.actor.animate([{transform:'translate(0,0)'},{transform:pose}],{duration:1350,easing:'ease-in-out',fill:'forwards'});
+ const bounce=runner.actor.querySelector('.runner').animate([{transform:'translateY(0) rotate(-6deg)'},{transform:'translateY(-9px) rotate(6deg)'},{transform:'translateY(0) rotate(-6deg)'}],{duration:180,iterations:8});
+ await movement.finished.catch(()=>{});runner.actor.style.transform=pose;movement.cancel();bounce.cancel();puff();
+ await new Promise(resolve=>setTimeout(resolve,350));
+}
 let progress=[];
 try{const saved=JSON.parse(localStorage.getItem('pereprava-v1')||'[]');if(Array.isArray(saved))progress=saved.filter(i=>Number.isInteger(i)&&i>=0&&i<5);}catch(_){/* Игра работает и без хранилища. */}
 const level=()=>LEVELS[levelIndex];
@@ -104,7 +163,7 @@ function findRoute(positions,boat,config){
 function saveProgress(){if(!progress.includes(levelIndex))progress.push(levelIndex);try{localStorage.setItem('pereprava-v1',JSON.stringify(progress));}catch(_){} }
 function startLevel(index){
  if(busy)return;
- levelIndex=index;animationToken++;history=[];highlighted=[];note='';
+ clearEffects();levelIndex=index;animationToken++;history=[];highlighted=[];note='';
  state={positions:level().cast.map(()=>0),boat:0,selected:[],moves:0,status:'idle'};
  for(const d of document.querySelectorAll('dialog'))if(d.open)d.close();
  // Не проигрываем обратную анимацию при перезапуске или смене уровня.
@@ -122,6 +181,7 @@ function togglePassenger(index){
 function makePassenger(index){
  const [emoji,name]=level().cast[index],button=document.createElement('button');
  button.type='button';button.className='passenger';button.dataset.passenger=index;
+ button.style.gridArea=(Math.floor(index/2)+1)+' / '+((index%2)+1);
  button.disabled=busy||state.status!=='idle'||state.positions[index]!==state.boat;
  if(highlighted.includes(index))button.classList.add('hint');
  if(state.status==='error'&&unsafePairs(state.positions,state.boat,level()).some(p=>p.includes(index)))button.classList.add('danger');
@@ -132,16 +192,16 @@ function makePassenger(index){
 }
 function defaultMessage(){
  if(state.status==='won')return 'Все на другом берегу! Отличная работа.';
- if(state.status==='error'){
-  const pair=unsafePairs(state.positions,state.boat,level())[0],r=level().pairs.findIndex(p=>p[0]===pair[0]&&p[1]===pair[1]);
-  return level().reasons[r]+' Нажми «Вернуть ход» и попробуй иначе.';
- }
+ if(state.status==='losing')return 'Ой-ой! Посмотри, кто остался без присмотра!';
+ if(state.status==='lost')return 'Переправа не удалась. Попробуй ещё раз или верни ход.';
  if(busy)return 'Плывём… Посмотри, кто остался на берегу.';
  if(levelIndex===0&&state.moves===0&&!state.selected.length)return 'Начни с курицы: нажми на неё, а затем на «Плывём».';
  if(state.selected.length)return 'В лодке: '+state.selected.map(i=>level().cast[i][1].toLowerCase()).join(', ')+'. Можно отправляться!';
  return state.boat===1?'Кого заберём обратно? Можно вернуться одному.':'Выбери пассажира. Мальчик может плыть и один.';
 }
 function render(){
+ $('chaseLayer').replaceChildren();$('lossPanel').hidden=state.status!=='lost';
+ document.querySelector('.game').classList.toggle('lost',state.status==='lost');document.querySelector('.game').classList.toggle('losing',state.status==='losing');
  const c=level();$('levels').replaceChildren();
  LEVELS.forEach((config,index)=>{const b=document.createElement('button');b.type='button';b.className='level'+(index===levelIndex?' active':'')+(progress.includes(index)?' done':'');b.textContent=index+1;b.title=config.title;b.setAttribute('aria-label','Уровень '+(index+1)+': '+config.title);if(index===levelIndex)b.setAttribute('aria-current','step');b.disabled=busy;b.addEventListener('click',()=>startLevel(index));$('levels').append(b);});
  const label=document.createElement('div');label.className='level-title';label.innerHTML=c.title+'<small>'+c.subtitle+'</small>';$('levels').append(label);
@@ -151,7 +211,8 @@ function render(){
  $('leftBank').replaceChildren();$('rightBank').replaceChildren();
  c.cast.forEach((_,i)=>{if(!state.selected.includes(i))$(state.positions[i]===0?'leftBank':'rightBank').append(makePassenger(i));});
  $('boat').classList.toggle('right',state.boat===1);
- $('crew').innerHTML='<span class="driver" role="img" aria-label="Мальчик — перевозчик">'+icon('🧑‍🦱')+'</span>';
+ const panic=state.status==='losing'||state.status==='lost';
+ $('crew').innerHTML='<span class="driver'+(panic?' panic':'')+'" role="img" aria-label="'+(panic?'Мальчик хватается за голову':'Мальчик — перевозчик')+'">'+driverIcon(panic)+'</span>';
  for(let slot=0;slot<c.capacity;slot++){
   const i=state.selected[slot],b=document.createElement('button');b.type='button';b.className='seat '+(i===undefined?'empty':'filled');
   b.innerHTML=i===undefined?'+':icon(c.cast[i][0]);b.disabled=i===undefined||busy||state.status!=='idle';
@@ -163,36 +224,42 @@ function render(){
  $('undo').disabled=busy||!history.length;
  $('reset').disabled=busy;$('rules').disabled=busy;
  $('sail').disabled=busy;
- $('sail').textContent=state.status==='error'?'↶ Вернуть ход':state.status==='won'?(levelIndex===4?'Ещё раз':'Дальше →'):(state.boat===0?'Плывём →':'← Плывём');
+ $('sail').hidden=state.status==='lost';
+ $('sail').textContent=state.status==='won'?(levelIndex===4?'Ещё раз':'Дальше →'):(state.boat===0?'Плывём →':'← Плывём');
  $('hint').hidden=levelIndex!==0;$('hint').disabled=busy||state.status!=='idle';
  if(levelIndex===0&&state.moves===0&&!state.selected.length&&state.status==='idle'){
   const chicken=$('leftBank').querySelector('[data-passenger="1"]');if(chicken)chicken.classList.add('hint');
  }
+ if(state.status==='lost'&&state.attack){$('lossReason').textContent=failureReason(state.attack);chasePair(state.attack,false);}
 }
 async function sail(){
  if(busy)return;
- if(state.status==='error'){undo();return;}
+ if(state.status==='lost')return;
  if(state.status==='won'){startLevel(levelIndex===4?4:levelIndex+1);return;}
+ prepareAudio();
  history.push(snapshot());busy=true;note='';highlighted=[];const token=++animationToken;
- const destination=1-state.boat,passengers=[...state.selected];render();
+ const destination=1-state.boat,passengers=[...state.selected],futurePositions=[...state.positions];passengers.forEach(i=>futurePositions[i]=destination);
+ const danger=unsafePairs(futurePositions,destination,level())[0];if(danger){state.status='losing';state.attack=danger;}
+ render();
  // Даём браузеру показать посадку до движения лодки.
  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
  $('boat').classList.toggle('right',destination===1);
- await new Promise(resolve=>setTimeout(resolve,window.matchMedia('(prefers-reduced-motion: reduce)').matches?20:900));
+ if(danger)playPanic();
+ await Promise.all([new Promise(resolve=>setTimeout(resolve,reducedMotion()?20:900)),danger?chasePair(danger):Promise.resolve()]);
  if(token!==animationToken)return;
- passengers.forEach(i=>state.positions[i]=destination);state.boat=destination;state.selected=[];state.moves++;busy=false;
- if(unsafePairs(state.positions,state.boat,level()).length)state.status='error';
+ state.positions=futurePositions;state.boat=destination;state.selected=danger?passengers:[];state.moves++;busy=false;
+ if(danger)state.status='lost';
  else if(state.boat===1&&state.positions.every(b=>b===1)){state.status='won';saveProgress();}
- render();if(state.status==='won')showWin();
+ render();if(state.status==='won')showWin();else if(state.status==='lost')$('retry').focus({preventScroll:true});
 }
 function undo(){
  if(busy||!history.length)return;
- animationToken++;state=history.pop();state.selected=[];state.status='idle';note='Ход возвращён. Выбери, кого повезти.';highlighted=[];
+ clearEffects();animationToken++;state=history.pop();state.selected=[];state.status='idle';state.attack=null;note='Ход возвращён. Выбери, кого повезти.';highlighted=[];
  $('boat').style.transition='none';render();void $('boat').offsetWidth;$('boat').style.transition='';
  if($('resultDialog').open)$('resultDialog').close();
 }
 function showRules(){
- const c=level();$('rulesBody').innerHTML='<p class="rule-line">Перевези всех на правый берег. Нажми на пассажира для посадки, затем на «Плывём». Повторный клик высаживает пассажира.</p><p class="rule-line">В лодке мальчик и <b>'+c.capacity+(c.capacity===1?' пассажир':' пассажира')+'</b>. Можно плыть одному и возвращать пассажиров обратно.</p><p class="rule-line"><b>Без мальчика нельзя оставлять вместе:</b></p>'+c.pairs.map(([a,b],i)=>'<div class="rule-pair"><span class="icons">'+icon(c.cast[a][0])+' '+icon(c.cast[b][0])+'</span><span class="explain">'+c.reasons[i]+'</span></div>').join('')+'<p class="rule-line">В присутствии мальчика все в безопасности — и на берегу, и в лодке. При ошибке нажми «Вернуть ход».</p>'+(levelIndex>=2?'<p class="rule-line">Попробуй пройти за <b>'+c.target+' рейсов</b>. Возвращение тоже считается. Если рейсов больше, всё равно можно закончить игру.</p>':'');
+ const c=level();$('rulesBody').innerHTML='<p class="rule-line">Перевези всех на правый берег. Нажми на пассажира для посадки, затем на «Плывём». Повторный клик высаживает пассажира.</p><p class="rule-line">В лодке мальчик и <b>'+c.capacity+(c.capacity===1?' пассажир':' пассажира')+'</b>. Можно плыть одному и возвращать пассажиров обратно.</p><p class="rule-line"><b>Без мальчика нельзя оставлять вместе:</b></p>'+c.pairs.map(([a,b],i)=>'<div class="rule-pair"><span class="icons">'+icon(c.cast[a][0])+' '+icon(c.cast[b][0])+'</span><span class="explain">'+c.reasons[i]+'</span></div>').join('')+'<p class="rule-line">В присутствии мальчика все в безопасности — и на берегу, и в лодке. Если кто-то остался без присмотра, он подбежит к соседу — игра закончится. Попробуй ещё раз или нажми «Вернуть ход».</p>'+(levelIndex>=2?'<p class="rule-line">Попробуй пройти за <b>'+c.target+' рейсов</b>. Возвращение тоже считается. Если рейсов больше, всё равно можно закончить игру.</p>':'');
  $('rulesDialog').showModal();
 }
 function showHint(){
@@ -211,6 +278,7 @@ function showWin(){
  for(let i=0;i<28;i++){const piece=document.createElement('i');piece.className='confetti';piece.style.left=(Math.random()*100)+'%';piece.style.background=['#86b4c9','#e9be7a','#c0abd5','#8fbfa9'][i%4];piece.style.animationDelay=(Math.random()*.5)+'s';$('scene').append(piece);setTimeout(()=>piece.remove(),3400);}
 }
 $('sail').addEventListener('click',sail);$('undo').addEventListener('click',undo);$('reset').addEventListener('click',()=>startLevel(levelIndex));$('rules').addEventListener('click',showRules);$('hint').addEventListener('click',showHint);$('replay').addEventListener('click',()=>startLevel(levelIndex));$('next').addEventListener('click',()=>startLevel(levelIndex===4?0:levelIndex+1));
+$('sound').addEventListener('click',toggleSound);$('retry').addEventListener('click',()=>startLevel(levelIndex));$('lossUndo').addEventListener('click',undo);
 document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>$(b.dataset.close).close()));
 startLevel(0);
 </script>
