@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Переправа — пять приключений</title>
+<link rel="preload" as="image" href="assets/characters/boy-calm.webp">
+<link rel="preload" as="image" href="assets/characters/boy-panic.webp">
 <link rel="preload" as="image" href="assets/characters/fox.webp">
 <link rel="preload" as="image" href="assets/characters/hen.webp">
 <link rel="preload" as="image" href="assets/characters/grain.webp">
@@ -49,6 +51,9 @@ html,body{height:100%;overflow:hidden}.app{width:100%;height:100svh;min-height:0
 
 /* Нос лодки касается кромки воды на обоих берегах, с учётом размера экрана. */
 .boat{left:var(--dock-left,32%)}.boat.right{left:var(--dock-right,70%)}
+/* Обе позы перевозчика занимают одинаковое место над бортом лодки. */
+.driver{position:relative;display:block;flex:0 0 1.12em;width:1.12em;height:1.32em;line-height:0;margin-bottom:-.12em}
+.driver-sprite{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 3px 2px #26476c20)}
 </style>
 </head>
 <body>
@@ -124,9 +129,8 @@ let levelIndex=0, state, history=[], busy=false, highlighted=[], note='', animat
 let soundEnabled=true,audioContext=null,soundNodes=[];
 const reducedMotion=()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 function driverIcon(panic){
- if(!panic)return icon('🧑‍🦱');
- const drawing=ART['🧑‍🦱'].replace('<path d="M43 60Q50 65 57 60" fill="none" stroke="#ad7760" stroke-width="2" stroke-linecap="round"/>','<ellipse cx="50" cy="61" rx="5" ry="7" fill="#875849"/><path d="M35 43L43 41M57 41L65 43" stroke="#72534b" stroke-width="2"/>')+'<path d="M24 92Q-2 62 23 28M76 92Q102 62 77 28" fill="none" stroke="#446f95" stroke-width="12" stroke-linecap="round"/><ellipse cx="24" cy="28" rx="7" ry="10" fill="#edc6a0" transform="rotate(-18 24 28)"/><ellipse cx="76" cy="28" rx="7" ry="10" fill="#edc6a0" transform="rotate(18 76 28)"/>';
- return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="1em" height="1em" aria-hidden="true">'+drawing+'</svg>';
+ const pose=panic?'panic':'calm';
+ return '<img class="driver-sprite" src="assets/characters/boy-'+pose+'.webp" width="640" height="640" alt="" aria-hidden="true" decoding="sync" draggable="false">';
 }
 // Короткий комический возглас «у-у, ха-ха» из встроенного синтезатора.
 // Звук разблокируется нажатием «Плывём»; запись и внешние файлы не нужны.
