@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Переправа — пять приключений</title>
-<link rel="preload" as="image" href="assets/wooden-boat.webp">
+<link rel="preload" as="image" href="assets/wooden-boat-open.webp">
 <link rel="preload" as="image" href="assets/characters/boy-calm.webp">
 <link rel="preload" as="image" href="assets/characters/boy-panic.webp">
 <link rel="preload" as="image" href="assets/characters/fox.webp">
@@ -55,7 +55,7 @@ html,body{height:100%;overflow:hidden}.app{width:100%;height:100svh;min-height:0
 .driver-sprite{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 3px 2px #26476c20)}
 /* Деревянная лодка и перевозчик крупнее, с местом для двух пассажиров. */
 .boat{width:clamp(270px,31vw,420px);height:180px}
-.boat-hull{height:auto;aspect-ratio:1100/257;z-index:2}
+.boat-hull{height:auto;aspect-ratio:1100/285;z-index:2;filter:none}
 .crew{bottom:clamp(62px,5.7vw,82px);left:7%;right:7%;z-index:1}
 .driver{font-size:clamp(60px,7vw,96px)}
 @media(max-width:680px){.boat{width:220px;height:145px}.crew{bottom:43px;left:4%;right:4%}.driver{font-size:56px}}
@@ -71,6 +71,10 @@ html,body{height:100%;overflow:hidden}.app{width:100%;height:100svh;min-height:0
 .seat.filled,.seat.filled:hover{position:relative;top:.14em;background:transparent;border-color:transparent;box-shadow:none}
 @keyframes passenger-hint{50%{filter:drop-shadow(0 0 7px #ffcf65)}}
 @media(prefers-reduced-motion:reduce){.passenger.hint .emoji{animation:none}}
+/* Задний борт позади пассажиров, передний борт закрывает их нижнюю часть. */
+.boat-back{position:absolute;bottom:8px;width:100%;height:auto;aspect-ratio:1100/285;z-index:0;filter:drop-shadow(0 7px 3px #2d6a8d22);pointer-events:none}
+.crew{bottom:var(--crew-bottom,50px)}
+.driver{margin-bottom:-.1em}
 </style>
 </head>
 <body>
@@ -101,7 +105,7 @@ html,body{height:100%;overflow:hidden}.app{width:100%;height:100svh;min-height:0
    <div class="bank-label left">ОТПРАВЛЕНИЕ</div><div class="bank-label right">ДРУГОЙ БЕРЕГ</div>
    <div class="shore left" id="leftBank" aria-label="Левый берег"></div><div class="shore right" id="rightBank" aria-label="Правый берег"></div>
    <div class="chase-layer" id="chaseLayer" aria-hidden="true"></div>
-   <div class="boat" id="boat" aria-label="Лодка"><div class="boat-inner"><div class="crew" id="crew"></div><img class="boat-hull" src="assets/wooden-boat.webp" width="1100" height="257" alt="" aria-hidden="true" draggable="false"></div><div class="boat-label" id="boatLabel"></div></div>
+   <div class="boat" id="boat" aria-label="Лодка"><div class="boat-inner"><div class="crew" id="crew"></div><img class="boat-back" src="assets/wooden-boat-open.webp" width="1100" height="285" alt="" aria-hidden="true" draggable="false"><svg class="boat-hull" viewBox="0 0 1100 285" aria-hidden="true"><defs><clipPath id="frontBoatRim"><path d="M0 0L40 82C170 149 330 165 550 161C810 166 960 128 1055 60L1100 0V285H0Z"/></clipPath></defs><image href="assets/wooden-boat-open.webp" width="1100" height="285" clip-path="url(#frontBoatRim)"/></svg></div><div class="boat-label" id="boatLabel"></div></div>
   </div>
   <footer class="bottom"><div class="message" id="message" role="status" aria-live="polite"></div><button class="action" id="sail">Плывём →</button></footer>
   <section class="loss-panel" id="lossPanel" role="region" aria-labelledby="lossTitle" hidden><h2 id="lossTitle">Ой, не получилось!</h2><p id="lossReason"></p><div class="loss-actions"><button class="action" id="retry">Ещё раз</button><button class="tool" id="lossUndo">↶ Вернуть ход</button></div></section>
@@ -263,6 +267,7 @@ function positionDocks(){
  if(!sceneBox.width||!sceneBox.height)return;
  // Размеры до покачивания сохраняют неподвижные точки причаливания.
  const width=hull.clientWidth,height=hull.clientHeight;
+ boat.style.setProperty('--crew-bottom',(8+height*.39)+'px');
  const hullTop=boat.offsetTop+boat.offsetHeight/2-parseFloat(getComputedStyle(hull).bottom)-height;
  function bankAt(y,side){
   const row=Math.max(RIVER_BANKS[0][0],Math.min(RIVER_BANKS[RIVER_BANKS.length-1][0],y));
@@ -271,8 +276,8 @@ function positionDocks(){
   return (a[side]+(b[side]-a[side])*t)*sceneBox.width;
  }
  // У новой лодки корма слева чуть ниже носа справа.
- const leftBank=bankAt((hullTop+height*.17)/sceneBox.height,1);
- const rightBank=bankAt((hullTop+height*.04)/sceneBox.height,2);
+ const leftBank=bankAt((hullTop+height*.08)/sceneBox.height,1);
+ const rightBank=bankAt((hullTop+height*.05)/sceneBox.height,2);
  const halfHull=width/2,contact=3;
  scene.style.setProperty('--dock-left',(leftBank+halfHull-contact)+'px');
  scene.style.setProperty('--dock-right',(rightBank-halfHull+contact)+'px');
