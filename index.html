@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Переправа — пять приключений</title>
+<link rel="preload" as="image" href="assets/wooden-boat.webp">
 <link rel="preload" as="image" href="assets/characters/boy-calm.webp">
 <link rel="preload" as="image" href="assets/characters/boy-panic.webp">
 <link rel="preload" as="image" href="assets/characters/fox.webp">
@@ -40,7 +41,6 @@ html,body{height:100%;overflow:hidden}.app{width:100%;height:100svh;min-height:0
 @keyframes summer-glint{0%,100%{opacity:0;transform:scaleX(.65)}45%{opacity:.55;transform:scaleX(1.15)}}
 @keyframes boat-ripple{from{transform:scale(.8);opacity:.5}to{transform:scale(1.35,1.7);opacity:0}}
 @media(prefers-reduced-motion:reduce){.summer-current,.glint,.game.sailing .boat::before{animation:none!important;opacity:.12}}
-
 /* Прозрачный низ и переправа выше, в более узкой части реки. */
 .bottom{background:transparent;border:0;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
 .bottom .message{font-weight:650;text-shadow:0 1px 3px #fff,0 0 10px #ffffffb3}
@@ -48,12 +48,19 @@ html,body{height:100%;overflow:hidden}.app{width:100%;height:100svh;min-height:0
 @media(max-width:680px){.boat{left:36%;top:66%}.boat.right{left:64%}.shore{top:39%;height:24%}}
 @media(max-height:650px) and (min-width:681px){.boat{top:62%}}
 @media(max-height:650px) and (max-width:680px){.boat{top:66%}.shore{top:41%;height:21%}}
-
 /* Нос лодки касается кромки воды на обоих берегах, с учётом размера экрана. */
 .boat{left:var(--dock-left,32%)}.boat.right{left:var(--dock-right,70%)}
 /* Обе позы перевозчика занимают одинаковое место над бортом лодки. */
 .driver{position:relative;display:block;flex:0 0 1.12em;width:1.12em;height:1.32em;line-height:0;margin-bottom:-.12em}
 .driver-sprite{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 3px 2px #26476c20)}
+/* Деревянная лодка и перевозчик крупнее, с местом для двух пассажиров. */
+.boat{width:clamp(270px,31vw,420px);height:180px}
+.boat-hull{height:auto;aspect-ratio:1100/257;z-index:2}
+.crew{bottom:clamp(62px,5.7vw,82px);left:7%;right:7%;z-index:1}
+.driver{font-size:clamp(60px,7vw,96px)}
+@media(max-width:680px){.boat{width:220px;height:145px}.crew{bottom:43px;left:4%;right:4%}.driver{font-size:56px}}
+@media(max-height:650px) and (min-width:681px){.boat{width:270px;height:145px}.crew{bottom:53px}.driver{font-size:64px}}
+@media(max-height:650px) and (max-width:680px){.boat{width:204px;height:126px}.crew{bottom:40px}.driver{font-size:48px}}
 </style>
 </head>
 <body>
@@ -84,7 +91,7 @@ html,body{height:100%;overflow:hidden}.app{width:100%;height:100svh;min-height:0
    <div class="bank-label left">ОТПРАВЛЕНИЕ</div><div class="bank-label right">ДРУГОЙ БЕРЕГ</div>
    <div class="shore left" id="leftBank" aria-label="Левый берег"></div><div class="shore right" id="rightBank" aria-label="Правый берег"></div>
    <div class="chase-layer" id="chaseLayer" aria-hidden="true"></div>
-   <div class="boat" id="boat" aria-label="Лодка"><div class="boat-inner"><div class="crew" id="crew"></div><svg class="boat-hull" viewBox="0 0 260 55" aria-hidden="true"><path d="M6 7Q130 22 254 7L224 43Q130 60 36 43Z" fill="#b27b58" stroke="#805c48" stroke-width="3"/><path d="M14 12Q130 30 246 12M30 30Q130 47 230 30" fill="none" stroke="#d2a07a" stroke-width="4"/><path d="M5 7Q130 20 255 7" fill="none" stroke="#e1b590" stroke-width="6" stroke-linecap="round"/></svg></div><div class="boat-label" id="boatLabel"></div></div>
+   <div class="boat" id="boat" aria-label="Лодка"><div class="boat-inner"><div class="crew" id="crew"></div><img class="boat-hull" src="assets/wooden-boat.webp" width="1100" height="257" alt="" aria-hidden="true" draggable="false"></div><div class="boat-label" id="boatLabel"></div></div>
   </div>
   <footer class="bottom"><div class="message" id="message" role="status" aria-live="polite"></div><button class="action" id="sail">Плывём →</button></footer>
   <section class="loss-panel" id="lossPanel" role="region" aria-labelledby="lossTitle" hidden><h2 id="lossTitle">Ой, не получилось!</h2><p id="lossReason"></p><div class="loss-actions"><button class="action" id="retry">Ещё раз</button><button class="tool" id="lossUndo">↶ Вернуть ход</button></div></section>
@@ -244,16 +251,19 @@ function positionDocks(){
  if(!scene||!hull)return;
  const sceneBox=scene.getBoundingClientRect(),boat=$('boat');
  if(!sceneBox.width||!sceneBox.height)return;
- // Используем размеры до покачивания: точки причаливания остаются неподвижными.
+ // Размеры до покачивания сохраняют неподвижные точки причаливания.
  const width=hull.clientWidth,height=hull.clientHeight;
- const scale=Math.min(width/260,height/55),paddingY=(height-55*scale)/2;
  const hullTop=boat.offsetTop+boat.offsetHeight/2-parseFloat(getComputedStyle(hull).bottom)-height;
- const y=(hullTop+paddingY+9*scale)/sceneBox.height;
- const row=Math.max(RIVER_BANKS[0][0],Math.min(RIVER_BANKS[RIVER_BANKS.length-1][0],y));
- let i=0;while(i<RIVER_BANKS.length-2&&RIVER_BANKS[i+1][0]<row)i++;
- const a=RIVER_BANKS[i],b=RIVER_BANKS[i+1],t=(row-a[0])/(b[0]-a[0]);
- const leftBank=(a[1]+(b[1]-a[1])*t)*sceneBox.width,rightBank=(a[2]+(b[2]-a[2])*t)*sceneBox.width;
- const halfHull=127*scale,contact=3;
+ function bankAt(y,side){
+  const row=Math.max(RIVER_BANKS[0][0],Math.min(RIVER_BANKS[RIVER_BANKS.length-1][0],y));
+  let i=0;while(i<RIVER_BANKS.length-2&&RIVER_BANKS[i+1][0]<row)i++;
+  const a=RIVER_BANKS[i],b=RIVER_BANKS[i+1],t=(row-a[0])/(b[0]-a[0]);
+  return (a[side]+(b[side]-a[side])*t)*sceneBox.width;
+ }
+ // У новой лодки корма слева чуть ниже носа справа.
+ const leftBank=bankAt((hullTop+height*.17)/sceneBox.height,1);
+ const rightBank=bankAt((hullTop+height*.04)/sceneBox.height,2);
+ const halfHull=width/2,contact=3;
  scene.style.setProperty('--dock-left',(leftBank+halfHull-contact)+'px');
  scene.style.setProperty('--dock-right',(rightBank-halfHull+contact)+'px');
 }
