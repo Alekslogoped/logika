@@ -1,1 +1,218 @@
-
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Переправа — пять приключений</title>
+<style>
+:root{--ink:#243f63;--blue:#307baf;--soft:#e8f4fa;--line:#b3d3e5;--white:#fff;--shadow:0 12px 32px #26476c12}
+*{box-sizing:border-box}body{margin:0;background:#e8f1f8;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}button:disabled{cursor:default;opacity:.45}button:focus-visible{outline:3px solid #ec9a29;outline-offset:3px}button{transition:background .15s,transform .15s}button:not(:disabled):active{transform:scale(.96)}
+.app{width:min(1220px,100%);margin:auto;padding:18px 24px 14px;min-height:100svh;display:flex;flex-direction:column;gap:12px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{font-size:24px;font-weight:850;letter-spacing:-.7px}.brand small{display:block;font-size:12px;font-weight:550;letter-spacing:.1px;color:#637e97;margin-top:2px}.tools{display:flex;gap:7px}.tool,.level{border:1px solid var(--line);background:#ffffffc9;border-radius:14px;padding:10px 14px;font-weight:700}.tool:hover,.level:hover{background:white}.levels{display:flex;gap:8px;align-items:center}.level{min-width:47px;padding:9px 12px;position:relative}.level.active{background:var(--ink);color:white;border-color:var(--ink)}.level.done::after{content:'✓';position:absolute;right:-3px;top:-5px;background:#5d9d83;color:white;border:2px solid #e8f1f8;border-radius:50%;font-size:10px;width:17px;height:17px}.level-title{margin-left:8px;font-size:16px;font-weight:750}.level-title small{display:block;font-size:12px;font-weight:500;color:#607a93;margin-top:2px}
+.game{border:1px solid #fff;background:#f6fbff;border-radius:26px;box-shadow:var(--shadow);overflow:hidden;position:relative}.game-info{display:flex;justify-content:space-between;gap:10px;padding:13px 20px;background:#ffffffb8;align-items:center}.trip-info{display:flex;gap:8px;flex-wrap:wrap}.badge{background:#eaf3f9;border-radius:20px;font-size:12px;font-weight:700;padding:6px 11px}.danger-list{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.danger-pill{background:#fff3ed;border:1px solid #f0d5c8;border-radius:13px;padding:3px 7px;font-size:18px;white-space:nowrap}.danger-pill span{font-size:12px;vertical-align:middle;color:#b16e56;margin:0 2px}
+.scene{height:clamp(300px,47vh,510px);position:relative;isolation:isolate;background:linear-gradient(#dcecf6 0%,#edf7fb 42%,#f8fbff 43%);overflow:hidden}.landscape{position:absolute;width:100%;height:100%;inset:0;z-index:-2}.bank-label{position:absolute;top:12%;font-size:11px;font-weight:800;letter-spacing:2px;color:#6b889f}.bank-label.left{left:9%}.bank-label.right{right:8%}.shore{position:absolute;top:29%;width:29%;height:59%;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;align-items:center;justify-items:center;gap:2px;padding:4px}.shore.left{left:1.5%}.shore.right{right:1.5%}.passenger{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;max-height:122px;border:2px solid transparent;background:transparent;border-radius:22px;position:relative}.passenger:hover:not(:disabled){background:#ffffffa6;border-color:#b1cfde}.passenger:disabled{opacity:.65}.passenger .emoji{font-size:clamp(38px,5.8vw,72px);line-height:1.1;filter:drop-shadow(0 6px 3px #466b7e20)}.passenger .name{font-size:clamp(10px,1.2vw,14px);font-weight:750;margin-top:5px;background:#ffffffc9;padding:3px 10px;border-radius:12px}.passenger.hint{border-color:#e1ac43;background:#fff5d999;animation:glow 1.3s ease-in-out infinite}.passenger.danger{border-color:#df8c7f;background:#ffe1d8ad;animation:shake .5s ease-in-out 2}.passenger.arrived::after{content:'✓';position:absolute;right:8%;top:4%;font-size:12px;color:#397459;background:#e7f6ef;border-radius:50%;width:21px;height:21px;display:grid;place-items:center}
+.boat{position:absolute;left:37%;top:66%;width:clamp(146px,23vw,260px);height:130px;transform:translate(-50%,-50%);transition:left .85s ease-in-out;z-index:3}.boat.right{left:63%}.boat-inner{height:100%;animation:bob 3s ease-in-out infinite}.boat-hull{position:absolute;bottom:8px;width:100%;height:48px;filter:drop-shadow(0 7px 3px #2d6a8d22)}.crew{position:absolute;bottom:42px;left:9%;right:9%;display:flex;gap:2px;align-items:flex-end;justify-content:center}.driver{font-size:clamp(33px,4.5vw,51px);line-height:1.15}.seat{border:1px dashed #668ea8;background:#f4fbffbd;border-radius:13px;min-width:40px;width:clamp(40px,5vw,60px);height:clamp(42px,5vw,61px);display:flex;align-items:center;justify-content:center;font-size:clamp(28px,3.7vw,44px);line-height:1;padding:0}.seat.empty{font-size:18px;color:#66899f}.seat.filled{border:1px solid #bdd5e2;background:#fff}.seat.filled:hover{background:#ffe9dc}.boat-label{position:absolute;top:100%;width:100%;text-align:center;font-size:11px;color:#52738e;font-weight:650}.water-shine{position:absolute;left:40%;top:23%;font-size:25px;color:#f1fbff9c;letter-spacing:8px;user-select:none;pointer-events:none}.snow{position:absolute;inset:0;pointer-events:none;z-index:-1;background-image:radial-gradient(circle,#fff 1.6px,transparent 2px),radial-gradient(circle,#fff9 1px,transparent 1.6px);background-size:113px 103px,77px 89px;background-position:7px 0,29px 33px}
+.bottom{padding:14px 20px 18px;display:flex;align-items:center;justify-content:space-between;gap:16px;background:#ffffffd9}.message{font-size:14px;line-height:1.5;max-width:660px;min-height:42px;display:flex;align-items:center}.action{background:var(--ink);color:white;min-width:172px;border:0;border-radius:16px;padding:14px 20px;font-weight:800;box-shadow:0 5px 0 #142d49}.action:hover:not(:disabled){background:#31557e}.action:disabled{box-shadow:none}.under{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:0 5px;font-size:12px;color:#6b839b}.text-btn{border:0;background:none;color:#466c8d;text-decoration:underline;text-underline-offset:3px;padding:6px}.sr-only{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0,0,0,0)}
+dialog{border:1px solid #cfdfeb;border-radius:25px;padding:24px;width:min(520px,calc(100% - 30px));color:var(--ink);box-shadow:0 30px 100px #15324d40;max-height:90svh;overflow:auto}dialog::backdrop{background:#19314b65;backdrop-filter:blur(4px)}.dialog-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.dialog-head h2{font-size:22px;margin:0}.close{border:0;background:#edf4fa;border-radius:50%;width:34px;height:34px;font-size:20px}.rule-line{font-size:15px;line-height:1.5;margin:12px 0}.rule-pair{display:flex;align-items:center;gap:12px;background:#f3f7fb;border-radius:15px;padding:10px 12px;margin:7px 0}.rule-pair .icons{font-size:29px;white-space:nowrap}.rule-pair .explain{font-size:13px}.dialog-footer{margin-top:20px;display:flex;gap:10px}.dialog-footer button{flex:1}.result{border-top:6px solid #75ac9a;text-align:center}.result .result-icon{font-size:64px}.result h2{font-size:32px;margin:5px 0}.result p{line-height:1.5}.confetti{position:absolute;top:-20px;width:9px;height:15px;animation:fall 2.8s linear forwards;z-index:8;pointer-events:none}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(4px) rotate(1deg)}}@keyframes glow{50%{box-shadow:0 0 0 5px #ecc56b40}}@keyframes shake{25%,75%{transform:translateX(-3px)}50%{transform:translateX(3px)}}@keyframes fall{to{transform:translateY(650px) rotate(540deg);opacity:0}}
+@media(min-width:800px) and (min-height:800px){.app{justify-content:center}.scene{height:min(52vh,510px)}}
+@media(max-width:680px){.app{padding:12px 9px;gap:10px}.brand{font-size:20px}.brand small{font-size:10px}.tools{gap:4px}.tool{padding:9px 10px;font-size:12px}.levels{gap:5px;flex-wrap:wrap}.level{min-width:40px;padding:8px 10px}.level-title{font-size:13px;margin-left:4px}.level-title small{font-size:10px}.game{border-radius:20px}.game-info{padding:10px;align-items:flex-start;flex-direction:column}.danger-list{justify-content:flex-start}.danger-pill{font-size:17px}.scene{height:340px}.shore{width:29%;padding:0;top:29%;height:59%;gap:0}.passenger{border-radius:14px;max-height:106px}.passenger .name{font-size:10px;padding:2px 4px}.passenger .emoji{font-size:40px}.boat{width:146px;top:69%}.crew{left:6%;right:6%}.driver{font-size:34px}.seat{min-width:34px;width:35px;height:43px;font-size:29px}.bank-label{font-size:9px;letter-spacing:1px}.bank-label.left{left:6%}.bank-label.right{right:5%}.bottom{padding:12px;gap:10px;flex-direction:column;align-items:stretch}.message{font-size:13px;min-height:40px}.action{padding:12px 16px}.under{font-size:11px;align-items:flex-start}.under span{max-width:65%}.passenger.arrived::after{right:0;top:3px;width:16px;height:16px;font-size:10px}}
+@media(max-height:550px) and (min-width:681px){.app{padding:7px 16px;gap:6px}.brand{font-size:20px}.brand small{display:none}.level{padding:5px 10px}.game-info{padding:6px 14px}.scene{height:250px}.bottom{padding:8px 14px}.action{padding:10px 16px}.passenger .emoji{font-size:43px}.passenger .name{margin-top:0;font-size:11px}.boat{top:69%;height:106px;width:180px}.driver{font-size:35px}.seat{width:40px;height:43px;font-size:31px}.under{font-size:10px}}
+@media(max-height:700px) and (min-width:681px){.scene{height:clamp(240px,43vh,300px)}.app{gap:8px;padding-top:12px;padding-bottom:10px}}
+@media(max-width:680px){.shore{top:24%;height:42%}.boat{top:76%}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main class="app">
+ <header class="top"><div class="brand">Переправа <small>Пять маленьких приключений</small></div><div class="tools"><button class="tool" id="undo" title="Отменить последнюю переправу">↶ Ход</button><button class="tool" id="reset">↻ Сначала</button><button class="tool" id="rules">? Правила</button></div></header>
+ <nav class="levels" id="levels" aria-label="Уровни"></nav>
+ <section class="game" aria-label="Игровое поле">
+  <div class="game-info"><div class="trip-info"><span class="badge" id="capacity"></span><span class="badge" id="counter"></span></div><div class="danger-list" id="dangerList" aria-label="Нельзя оставлять вместе без мальчика"></div></div>
+  <div class="scene" id="scene">
+   <svg class="landscape" viewBox="0 0 1200 500" preserveAspectRatio="none" aria-hidden="true">
+    <defs><linearGradient id="river" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#88bfd5"/><stop offset="1" stop-color="#518fac"/></linearGradient><g id="tree"><path d="M0 0L-28 50H-17L-40 83H-24L-49 118H49L24 83H40L17 50H28Z" fill="#a4c3cc"/><path d="M0 0L-28 50H28ZM0 36L-40 83H40ZM0 69L-49 118H49Z" fill="#edf5f8"/><path d="M-4 118V138H5V118" fill="#a3b4be"/></g></defs>
+    <path d="M0 151Q120 99 260 150T570 146T900 158T1200 123V500H0Z" fill="#d1e2ec"/>
+    <g opacity=".7"><use href="#tree" transform="translate(75 15) scale(.9)"/><use href="#tree" transform="translate(173 45) scale(.7)"/><use href="#tree" transform="translate(304 20) scale(.85)"/><use href="#tree" transform="translate(943 34) scale(.8)"/><use href="#tree" transform="translate(1085 5)"/></g>
+    <path d="M0 214Q180 144 360 205Q490 246 600 190Q776 117 964 207Q1090 254 1200 186V500H0Z" fill="#f1f8fc"/>
+    <path d="M501 126Q450 202 489 249Q543 315 450 391L411 500H811L768 411Q671 324 711 261Q744 202 677 126Z" fill="#c8e4ed"/>
+    <path d="M517 126Q466 205 508 251Q565 315 473 398L438 500H782L747 415Q647 327 692 257Q722 202 661 126Z" fill="url(#river)"/>
+    <g fill="none" stroke="#d4eff7" stroke-width="3" stroke-linecap="round" opacity=".55"><path d="M549 182h31m24 0h35m-116 99h41m60 0h28m-132 97h42m43 0h55m-169 94h45m67 0h49"/></g>
+    <path d="M0 375Q185 330 372 414L393 500H0Z" fill="#fff"/><path d="M857 424Q1000 332 1200 384V500H821Z" fill="#fff"/>
+    <g fill="#d7e7ef"><ellipse cx="153" cy="441" rx="39" ry="6"/><ellipse cx="1040" cy="454" rx="46" ry="7"/></g>
+   </svg>
+   <div class="snow"></div><div class="water-shine" aria-hidden="true">〜</div>
+   <div class="bank-label left">ОТПРАВЛЕНИЕ</div><div class="bank-label right">ДРУГОЙ БЕРЕГ</div>
+   <div class="shore left" id="leftBank" aria-label="Левый берег"></div><div class="shore right" id="rightBank" aria-label="Правый берег"></div>
+   <div class="boat" id="boat" aria-label="Лодка"><div class="boat-inner"><div class="crew" id="crew"></div><svg class="boat-hull" viewBox="0 0 260 55" aria-hidden="true"><path d="M6 7Q130 22 254 7L224 43Q130 60 36 43Z" fill="#b27b58" stroke="#805c48" stroke-width="3"/><path d="M14 12Q130 30 246 12M30 30Q130 47 230 30" fill="none" stroke="#d2a07a" stroke-width="4"/><path d="M5 7Q130 20 255 7" fill="none" stroke="#e1b590" stroke-width="6" stroke-linecap="round"/></svg></div><div class="boat-label" id="boatLabel"></div></div>
+  </div>
+  <footer class="bottom"><div class="message" id="message" role="status" aria-live="polite"></div><button class="action" id="sail">Плывём →</button></footer>
+ </section>
+ <div class="under"><span>Нажми на пассажира, чтобы посадить его в лодку.</span><button class="text-btn" id="hint">Подсказка</button></div>
+</main>
+<dialog id="rulesDialog" aria-labelledby="rulesTitle"><div class="dialog-head"><h2 id="rulesTitle">Как играть</h2><button class="close" data-close="rulesDialog" aria-label="Закрыть">×</button></div><div id="rulesBody"></div><div class="dialog-footer"><button class="action" data-close="rulesDialog">Всё понятно</button></div></dialog>
+<dialog id="resultDialog" class="result" aria-labelledby="resultTitle"><div class="result-icon" aria-hidden="true" style="color:#d3a358">★</div><h2 id="resultTitle">Молодец!</h2><p id="resultBody"></p><div class="dialog-footer"><button class="tool" id="replay">Ещё раз</button><button class="action" id="next">Дальше →</button></div><button class="text-btn" data-close="resultDialog" style="margin-top:16px">Посмотреть на героев</button></dialog>
+<script>
+'use strict';
+// Один автономный файл. Для GitHub Pages достаточно загрузить его как index.html.
+// Все настройки уровней — здесь. Индексы в pairs соответствуют элементам cast.
+const LEVELS = [
+ {title:'Первая переправа',subtitle:'Знакомимся с лодкой',capacity:1,target:7,cast:[['🦊','Лиса'],['🐔','Курица'],['🌾','Зерно']],pairs:[[0,1],[1,2]],reasons:['Лиса может поймать курицу.','Курица склюёт зерно.']},
+ {title:'Кот и мышка',subtitle:'Теперь попробуй самостоятельно',capacity:1,target:7,cast:[['🐱','Кот'],['🐭','Мышка'],['🧀','Сыр']],pairs:[[0,1],[1,2]],reasons:['Кот может поймать мышку.','Мышка съест сыр.']},
+ {title:'Морковка для зайчика',subtitle:'Попробуй уложиться в 7 рейсов',capacity:1,target:7,cast:[['🦊','Лиса'],['🐰','Зайчик'],['🥕','Морковка']],pairs:[[0,1],[1,2]],reasons:['Лиса может поймать зайчика.','Зайчик съест морковку.']},
+ {title:'Лиса и три попутчика',subtitle:'В лодке уже два места',capacity:2,target:5,cast:[['🦊','Лиса'],['🐰','Зайчик'],['🐔','Курица'],['🐭','Мышка']],pairs:[[0,1],[0,2],[0,3]],reasons:['Лиса может поймать зайчика.','Лиса может поймать курицу.','Лиса может поймать мышку.']},
+ {title:'Два хитрых пассажира',subtitle:'Продумай каждый рейс',capacity:2,target:5,cast:[['🐺','Волк'],['🦊','Лиса'],['🐰','Зайчик'],['🐔','Курица']],pairs:[[0,1],[0,2],[0,3],[1,2],[1,3]],reasons:['Волк и лиса без мальчика ссорятся.','Волк может поймать зайчика.','Волк может поймать курицу.','Лиса может поймать зайчика.','Лиса может поймать курицу.']}
+];
+// Встроенные SVG: персонажи видны даже без шрифта с эмодзи и без интернета.
+const face='<ellipse cx="36" cy="58" rx="3" ry="4" fill="#283c55"/><ellipse cx="64" cy="58" rx="3" ry="4" fill="#283c55"/>';
+const ART={
+ '🦊':'<path d="M18 43L13 8L42 27H58L87 8L82 43" fill="#df8e53"/><path d="M21 31L20 19L33 29M67 29L80 19L79 32" fill="#f2c0aa"/><path d="M12 40Q50 14 88 40L84 73L50 93L16 73Z" fill="#e79b5a"/><path d="M14 57Q33 58 50 77Q67 58 86 57L80 76L50 93L20 76Z" fill="#fff6e9"/>'+face+'<path d="M43 77Q50 72 57 77L50 84Z" fill="#283c55"/>',
+ '🐺':'<path d="M18 44L14 7L41 28H59L86 7L82 44" fill="#7b91a7"/><path d="M23 30L22 19L34 29M66 29L78 19L77 30" fill="#c0b6be"/><path d="M15 38Q50 22 85 38L92 66L78 63L80 79L50 94L20 79L22 63L8 66Z" fill="#8da3b6"/><path d="M23 64Q37 61 50 74Q63 61 77 64L74 81L50 94L26 81Z" fill="#e8eff0"/>'+face+'<path d="M43 76Q50 71 57 76L50 83Z" fill="#283c55"/>',
+ '🐱':'<path d="M18 44L14 9L40 26H60L86 9L82 44" fill="#dbac74"/><path d="M22 31L22 19L33 29M67 29L78 19L78 31" fill="#efb9ac"/><ellipse cx="50" cy="59" rx="40" ry="34" fill="#ecc791"/><path d="M43 27L47 42H53L57 27" fill="#d7a264"/>'+face+'<ellipse cx="50" cy="76" rx="16" ry="11" fill="#fff2dc"/><path d="M46 69H54L50 75Z" fill="#c77e7e"/><path d="M50 75V80M50 80L44 82M50 80L56 82M26 72L7 68M26 79L7 82M74 72L93 68M74 79L93 82" fill="none" stroke="#8e755f" stroke-width="2" stroke-linecap="round"/>',
+ '🐭':'<circle cx="22" cy="31" r="21" fill="#a9bacb"/><circle cx="78" cy="31" r="21" fill="#a9bacb"/><circle cx="22" cy="31" r="13" fill="#e4b9be"/><circle cx="78" cy="31" r="13" fill="#e4b9be"/><path d="M18 51Q50 23 82 51L76 77L50 94L24 77Z" fill="#b9c9d5"/>'+face+'<ellipse cx="50" cy="78" rx="7" ry="5" fill="#cb8d9d"/><path d="M30 75L9 70M30 81L10 84M70 75L91 70M70 81L90 84" stroke="#718aa1" stroke-width="2" stroke-linecap="round"/>',
+ '🐰':'<ellipse cx="32" cy="26" rx="12" ry="25" transform="rotate(-12 32 26)" fill="#f8fafb" stroke="#afc7d6" stroke-width="2"/><ellipse cx="68" cy="26" rx="12" ry="25" transform="rotate(12 68 26)" fill="#f8fafb" stroke="#afc7d6" stroke-width="2"/><ellipse cx="32" cy="25" rx="5" ry="17" transform="rotate(-12 32 25)" fill="#edc2c5"/><ellipse cx="68" cy="25" rx="5" ry="17" transform="rotate(12 68 25)" fill="#edc2c5"/><ellipse cx="50" cy="66" rx="35" ry="30" fill="#fff" stroke="#afc7d6" stroke-width="2"/>'+face+'<ellipse cx="27" cy="73" rx="7" ry="4" fill="#f3d2d3"/><ellipse cx="73" cy="73" rx="7" ry="4" fill="#f3d2d3"/><path d="M45 72Q50 68 55 72L50 77Z" fill="#cb8d9d"/><path d="M50 77V82M50 82L44 84M50 82L56 84" fill="none" stroke="#8d9da9" stroke-width="2"/>',
+ '🐔':'<path d="M36 28Q25 13 36 9Q43 7 46 16Q46 0 55 3Q65 5 58 20Q71 9 76 18Q81 28 65 33" fill="#ce7776"/><ellipse cx="51" cy="62" rx="34" ry="33" fill="#fffaf0" stroke="#d7c9b5" stroke-width="2"/><path d="M20 59L6 45L13 74L27 84" fill="#e4d4bc"/><path d="M43 91V97M62 91V97" stroke="#c89050" stroke-width="4" stroke-linecap="round"/>'+face+'<path d="M42 65L58 65L50 77Z" fill="#dfab57"/><ellipse cx="50" cy="83" rx="5" ry="7" fill="#ce7776"/>',
+ '🌾':'<path d="M31 32L24 16Q50 24 76 16L69 32L84 69Q90 93 50 96Q10 93 16 69Z" fill="#cfb78d" stroke="#a38a65" stroke-width="2"/><path d="M29 32Q50 39 71 32" fill="none" stroke="#8d7759" stroke-width="5"/><path d="M50 82V47M50 60L39 53M50 68L39 61M50 76L39 69M50 56L61 49M50 64L61 57M50 72L61 65" stroke="#fff1cb" stroke-width="4" stroke-linecap="round"/>',
+ '🧀':'<path d="M12 39L68 13L91 37V83L12 94Z" fill="#e9bf62" stroke="#c79c47" stroke-width="2"/><path d="M12 39L68 13L91 37L41 56Z" fill="#ffe4a0"/><path d="M41 56V89" stroke="#c79c47" stroke-width="2"/><ellipse cx="62" cy="66" rx="8" ry="6" fill="#ce9e48"/><ellipse cx="80" cy="48" rx="5" ry="4" fill="#ce9e48"/><ellipse cx="78" cy="78" rx="5" ry="4" fill="#ce9e48"/><ellipse cx="53" cy="33" rx="6" ry="4" fill="#e9bf62"/><ellipse cx="26" cy="65" rx="5" ry="8" fill="#ce9e48"/>',
+ '🥕':'<path d="M57 34Q48 5 61 4L65 24Q75 2 82 10L73 30Q96 17 95 29L72 42Z" fill="#79a883"/><path d="M62 30Q87 34 78 54L24 96Q16 100 20 88L43 39Q48 27 62 30Z" fill="#e8a05d" stroke="#ca8146" stroke-width="2"/><path d="M46 45L57 50M35 64L45 69M62 65L69 68M26 83L32 86" stroke="#c87f48" stroke-width="3" stroke-linecap="round"/>',
+ '🧑‍🦱':'<path d="M18 99V83Q20 68 50 68Q80 68 82 83V99Z" fill="#446f95"/><path d="M43 69L50 82L57 69" fill="#e4b886"/><circle cx="50" cy="42" r="27" fill="#edc6a0"/><path d="M23 36Q20 8 50 8Q80 8 77 36" fill="#698ca4"/><path d="M22 33H78V42H22Z" fill="#a0bdcc"/><circle cx="50" cy="8" r="8" fill="#dce9ef"/><circle cx="40" cy="49" r="2.5" fill="#283c55"/><circle cx="60" cy="49" r="2.5" fill="#283c55"/><path d="M43 60Q50 65 57 60" fill="none" stroke="#ad7760" stroke-width="2" stroke-linecap="round"/>'
+};
+function icon(emoji){return ART[emoji]?'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="1em" height="1em" style="vertical-align:middle" aria-hidden="true">'+ART[emoji]+'</svg>':emoji;}
+const $ = id => document.getElementById(id);
+let levelIndex=0, state, history=[], busy=false, highlighted=[], note='', animationToken=0;
+let progress=[];
+try{const saved=JSON.parse(localStorage.getItem('pereprava-v1')||'[]');if(Array.isArray(saved))progress=saved.filter(i=>Number.isInteger(i)&&i>=0&&i<5);}catch(_){/* Игра работает и без хранилища. */}
+const level=()=>LEVELS[levelIndex];
+const snapshot=()=>({positions:[...state.positions],boat:state.boat,selected:[...state.selected],moves:state.moves,status:state.status});
+// Проверка берега, оставленного БЕЗ мальчика. В лодке все под присмотром.
+function unsafePairs(positions,farmerBank,config){return config.pairs.filter(([a,b])=>positions[a]!==farmerBank&&positions[b]!==farmerBank&&positions[a]===positions[b]);}
+// Поиск кратчайшего безопасного маршрута; используется только для подсказки.
+function findRoute(positions,boat,config){
+ const queue=[{positions:[...positions],boat,path:[]}],seen=new Set([positions.join('')+boat]);
+ for(let head=0;head<queue.length;head++){
+  const current=queue[head];if(current.boat===1&&current.positions.every(b=>b===1))return current.path;
+  const available=current.positions.map((b,i)=>b===current.boat?i:-1).filter(i=>i!==-1);
+  for(let mask=0;mask<(1<<available.length);mask++){
+   const passengers=available.filter((_,j)=>mask&(1<<j));if(passengers.length>config.capacity)continue;
+   const nextPositions=[...current.positions],nextBoat=1-current.boat;passengers.forEach(i=>nextPositions[i]=nextBoat);
+   if(unsafePairs(nextPositions,nextBoat,config).length)continue;
+   const key=nextPositions.join('')+nextBoat;if(seen.has(key))continue;seen.add(key);
+   queue.push({positions:nextPositions,boat:nextBoat,path:[...current.path,passengers]});
+  }
+ }
+ return null;
+}
+function saveProgress(){if(!progress.includes(levelIndex))progress.push(levelIndex);try{localStorage.setItem('pereprava-v1',JSON.stringify(progress));}catch(_){} }
+function startLevel(index){
+ if(busy)return;
+ levelIndex=index;animationToken++;history=[];highlighted=[];note='';
+ state={positions:level().cast.map(()=>0),boat:0,selected:[],moves:0,status:'idle'};
+ for(const d of document.querySelectorAll('dialog'))if(d.open)d.close();
+ // Не проигрываем обратную анимацию при перезапуске или смене уровня.
+ $('boat').style.transition='none';render();void $('boat').offsetWidth;$('boat').style.transition='';
+}
+function togglePassenger(index){
+ if(busy||state.status!=='idle')return;
+ if(state.positions[index]!==state.boat)return;
+ note='';highlighted=[];
+ if(state.selected.includes(index))state.selected=state.selected.filter(i=>i!==index);
+ else if(state.selected.length<level().capacity)state.selected.push(index);
+ else note='В лодке больше нет места. Сначала высади одного пассажира.';
+ render();
+}
+function makePassenger(index){
+ const [emoji,name]=level().cast[index],button=document.createElement('button');
+ button.type='button';button.className='passenger';button.dataset.passenger=index;
+ button.disabled=busy||state.status!=='idle'||state.positions[index]!==state.boat;
+ if(highlighted.includes(index))button.classList.add('hint');
+ if(state.status==='error'&&unsafePairs(state.positions,state.boat,level()).some(p=>p.includes(index)))button.classList.add('danger');
+ if(state.positions[index]===1)button.classList.add('arrived');
+ button.setAttribute('aria-label',name+(button.disabled?' — на другом берегу':' — посадить в лодку'));
+ button.innerHTML='<span class="emoji" aria-hidden="true">'+icon(emoji)+'</span><span class="name">'+name+'</span>';
+ button.addEventListener('click',()=>togglePassenger(index));return button;
+}
+function defaultMessage(){
+ if(state.status==='won')return 'Все на другом берегу! Отличная работа.';
+ if(state.status==='error'){
+  const pair=unsafePairs(state.positions,state.boat,level())[0],r=level().pairs.findIndex(p=>p[0]===pair[0]&&p[1]===pair[1]);
+  return level().reasons[r]+' Нажми «Вернуть ход» и попробуй иначе.';
+ }
+ if(busy)return 'Плывём… Посмотри, кто остался на берегу.';
+ if(levelIndex===0&&state.moves===0&&!state.selected.length)return 'Начни с курицы: нажми на неё, а затем на «Плывём».';
+ if(state.selected.length)return 'В лодке: '+state.selected.map(i=>level().cast[i][1].toLowerCase()).join(', ')+'. Можно отправляться!';
+ return state.boat===1?'Кого заберём обратно? Можно вернуться одному.':'Выбери пассажира. Мальчик может плыть и один.';
+}
+function render(){
+ const c=level();$('levels').replaceChildren();
+ LEVELS.forEach((config,index)=>{const b=document.createElement('button');b.type='button';b.className='level'+(index===levelIndex?' active':'')+(progress.includes(index)?' done':'');b.textContent=index+1;b.title=config.title;b.setAttribute('aria-label','Уровень '+(index+1)+': '+config.title);if(index===levelIndex)b.setAttribute('aria-current','step');b.disabled=busy;b.addEventListener('click',()=>startLevel(index));$('levels').append(b);});
+ const label=document.createElement('div');label.className='level-title';label.innerHTML=c.title+'<small>'+c.subtitle+'</small>';$('levels').append(label);
+ $('capacity').textContent='Мест для пассажиров: '+c.capacity;
+ $('counter').textContent='Рейсы: '+state.moves+((levelIndex>=2)?' / цель '+c.target:'');
+ $('dangerList').innerHTML=c.pairs.map(([a,b],i)=>'<span class="danger-pill" role="img" aria-label="'+c.reasons[i]+'" title="'+c.reasons[i]+'">'+icon(c.cast[a][0])+'<span>×</span>'+icon(c.cast[b][0])+'</span>').join('');
+ $('leftBank').replaceChildren();$('rightBank').replaceChildren();
+ c.cast.forEach((_,i)=>{if(!state.selected.includes(i))$(state.positions[i]===0?'leftBank':'rightBank').append(makePassenger(i));});
+ $('boat').classList.toggle('right',state.boat===1);
+ $('crew').innerHTML='<span class="driver" role="img" aria-label="Мальчик — перевозчик">'+icon('🧑‍🦱')+'</span>';
+ for(let slot=0;slot<c.capacity;slot++){
+  const i=state.selected[slot],b=document.createElement('button');b.type='button';b.className='seat '+(i===undefined?'empty':'filled');
+  b.innerHTML=i===undefined?'+':icon(c.cast[i][0]);b.disabled=i===undefined||busy||state.status!=='idle';
+  b.setAttribute('aria-label',i===undefined?'Свободное место':c.cast[i][1]+' — высадить из лодки');
+  if(i!==undefined)b.addEventListener('click',()=>togglePassenger(i));$('crew').append(b);
+ }
+ $('boatLabel').textContent=busy?'Переправа…':state.selected.length+' / '+c.capacity+' пассажиров';
+ $('message').textContent=note||defaultMessage();
+ $('undo').disabled=busy||!history.length;
+ $('reset').disabled=busy;$('rules').disabled=busy;
+ $('sail').disabled=busy;
+ $('sail').textContent=state.status==='error'?'↶ Вернуть ход':state.status==='won'?(levelIndex===4?'Ещё раз':'Дальше →'):(state.boat===0?'Плывём →':'← Плывём');
+ $('hint').hidden=levelIndex!==0;$('hint').disabled=busy||state.status!=='idle';
+ if(levelIndex===0&&state.moves===0&&!state.selected.length&&state.status==='idle'){
+  const chicken=$('leftBank').querySelector('[data-passenger="1"]');if(chicken)chicken.classList.add('hint');
+ }
+}
+async function sail(){
+ if(busy)return;
+ if(state.status==='error'){undo();return;}
+ if(state.status==='won'){startLevel(levelIndex===4?4:levelIndex+1);return;}
+ history.push(snapshot());busy=true;note='';highlighted=[];const token=++animationToken;
+ const destination=1-state.boat,passengers=[...state.selected];render();
+ // Даём браузеру показать посадку до движения лодки.
+ await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+ $('boat').classList.toggle('right',destination===1);
+ await new Promise(resolve=>setTimeout(resolve,window.matchMedia('(prefers-reduced-motion: reduce)').matches?20:900));
+ if(token!==animationToken)return;
+ passengers.forEach(i=>state.positions[i]=destination);state.boat=destination;state.selected=[];state.moves++;busy=false;
+ if(unsafePairs(state.positions,state.boat,level()).length)state.status='error';
+ else if(state.boat===1&&state.positions.every(b=>b===1)){state.status='won';saveProgress();}
+ render();if(state.status==='won')showWin();
+}
+function undo(){
+ if(busy||!history.length)return;
+ animationToken++;state=history.pop();state.selected=[];state.status='idle';note='Ход возвращён. Выбери, кого повезти.';highlighted=[];
+ $('boat').style.transition='none';render();void $('boat').offsetWidth;$('boat').style.transition='';
+ if($('resultDialog').open)$('resultDialog').close();
+}
+function showRules(){
+ const c=level();$('rulesBody').innerHTML='<p class="rule-line">Перевези всех на правый берег. Нажми на пассажира для посадки, затем на «Плывём». Повторный клик высаживает пассажира.</p><p class="rule-line">В лодке мальчик и <b>'+c.capacity+(c.capacity===1?' пассажир':' пассажира')+'</b>. Можно плыть одному и возвращать пассажиров обратно.</p><p class="rule-line"><b>Без мальчика нельзя оставлять вместе:</b></p>'+c.pairs.map(([a,b],i)=>'<div class="rule-pair"><span class="icons">'+icon(c.cast[a][0])+' '+icon(c.cast[b][0])+'</span><span class="explain">'+c.reasons[i]+'</span></div>').join('')+'<p class="rule-line">В присутствии мальчика все в безопасности — и на берегу, и в лодке. При ошибке нажми «Вернуть ход».</p>'+(levelIndex>=2?'<p class="rule-line">Попробуй пройти за <b>'+c.target+' рейсов</b>. Возвращение тоже считается. Если рейсов больше, всё равно можно закончить игру.</p>':'');
+ $('rulesDialog').showModal();
+}
+function showHint(){
+ if(busy||state.status!=='idle')return;
+ const route=findRoute(state.positions,state.boat,level());if(!route||!route.length)return;
+ const next=route[0];highlighted=next;
+ note=next.length?'Следующим рейсом возьми: '+next.map(i=>level().cast[i][1].toLowerCase()).join(' и ')+'.':'Следующим рейсом мальчик плывёт один.';render();
+}
+function showWin(){
+ const optimal=state.moves===level().target;
+ $('resultTitle').textContent=levelIndex===4&&progress.length===5?'Все пять пройдены!':'Молодец!';
+ const reward=(levelIndex>=2&&optimal)?' ⭐ Ты нашёл самый короткий маршрут!':(levelIndex>=2?' Попробуй ещё раз: можно справиться за '+level().target+' рейсов.':'');
+ $('resultBody').textContent='Все пассажиры переправлены. Рейсов: '+state.moves+'.'+reward;
+ $('next').textContent=levelIndex===4?'К первому уровню':'Следующий уровень →';
+ $('resultDialog').showModal();
+ for(let i=0;i<28;i++){const piece=document.createElement('i');piece.className='confetti';piece.style.left=(Math.random()*100)+'%';piece.style.background=['#86b4c9','#e9be7a','#c0abd5','#8fbfa9'][i%4];piece.style.animationDelay=(Math.random()*.5)+'s';$('scene').append(piece);setTimeout(()=>piece.remove(),3400);}
+}
+$('sail').addEventListener('click',sail);$('undo').addEventListener('click',undo);$('reset').addEventListener('click',()=>startLevel(levelIndex));$('rules').addEventListener('click',showRules);$('hint').addEventListener('click',showHint);$('replay').addEventListener('click',()=>startLevel(levelIndex));$('next').addEventListener('click',()=>startLevel(levelIndex===4?0:levelIndex+1));
+document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>$(b.dataset.close).close()));
+startLevel(0);
+</script>
+</body>
+</html>
