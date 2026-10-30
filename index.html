@@ -115,6 +115,20 @@ html,body{height:100%;overflow:hidden}.app{width:100%;height:100svh;min-height:0
 @media(max-width:680px){.levels{top:53px;left:12px;right:12px;width:auto;gap:8px;flex-wrap:wrap}.level{flex-basis:39px;width:39px;height:39px;border-radius:13px;font-size:18px}.level-title{flex-basis:100%;margin:2px 0 0;padding:4px 8px}.game-info{top:142px}}
 @media(max-height:650px) and (min-width:901px){.levels{top:10px}.level{width:43px;height:43px;flex-basis:43px;border-radius:14px;font-size:19px}.level-title{top:55px}.game-info{top:110px}}
 @media(max-height:650px) and (max-width:680px){.levels{top:47px;gap:6px}.level{width:34px;height:34px;flex-basis:34px;border-radius:11px;font-size:16px}.level-title{margin-top:0}.game-info{top:117px}}
+/* Две отдельные компактные карточки освобождают центр сцены. */
+.level-card,.danger-list{position:absolute;z-index:10;top:83px;background:#f7fbecda;border:1px solid #ffffffa6;border-radius:20px;backdrop-filter:blur(12px);box-shadow:0 6px 20px #315a4910}
+.level-card{left:24px;width:max-content;max-width:calc(50% - 40px);padding:14px 16px 15px}
+.level-card .level-title{position:static;display:block;margin:0;padding:0;background:none;border-radius:0;backdrop-filter:none;white-space:normal;font-size:16px}
+.level-card .level-title small{margin-top:3px;font-size:12px;line-height:1.35}
+.level-card .trip-info{display:flex;flex-direction:column;align-items:flex-start;gap:7px;margin-top:14px}
+.level-card .badge{background:none;border-radius:0;padding:0;font-size:13px;line-height:1.4}
+.danger-list{right:24px;max-width:calc(50% - 40px);padding:11px 12px;gap:6px;align-items:center}
+@media(max-width:900px){.level-card,.danger-list{top:129px}}
+@media(max-width:680px){.level-card,.danger-list{top:108px;border-radius:15px}.level-card{left:12px;max-width:calc(50% - 18px);padding:10px}.level-card .level-title{font-size:12px}.level-card .level-title small{font-size:10px}.level-card .trip-info{margin-top:9px;gap:5px}.level-card .badge{font-size:10px}.danger-list{right:12px;max-width:calc(50% - 18px);padding:8px;gap:4px}}
+@media(max-height:650px) and (min-width:901px){.level-card,.danger-list{top:68px}}
+@media(max-height:650px) and (max-width:680px){.level-card,.danger-list{top:94px}.level-card .level-title small{display:none}}
+/* Пассажиры сидят глубже, передний борт полностью закрывает лапы. */
+.crew{left:43%;right:10%;gap:6px}
 </style>
 </head>
 <body>
@@ -122,7 +136,7 @@ html,body{height:100%;overflow:hidden}.app{width:100%;height:100svh;min-height:0
  <section class="game" aria-label="Игровое поле">
  <header class="top"><div class="tools"><button class="tool" id="undo" title="Отменить последнюю переправу">↶ Ход</button><button class="tool" id="reset">↻ Сначала</button><button class="tool" id="rules">? Правила</button><button class="tool" id="sound" aria-label="Выключить звук" aria-pressed="true"><svg class="sound-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9H7L12 5V19L7 15H3Z"/><path class="sound-waves" d="M16 8Q20 12 16 16M19 5Q26 12 19 19"/></svg><span class="sound-label">Звук</span></button></div></header>
  <nav class="levels" id="levels" aria-label="Уровни"></nav>
-  <div class="game-info"><div class="trip-info"><span class="badge" id="capacity"></span><span class="badge" id="counter"></span></div><div class="danger-list" id="dangerList" aria-label="Нельзя оставлять вместе без мальчика"></div></div>
+  <section class="level-card" aria-label="Уровень и рейсы"><div id="levelHeading"></div><div class="trip-info"><span class="badge" id="capacity"></span><span class="badge" id="counter"></span></div></section><div class="danger-list" id="dangerList" aria-label="Нельзя оставлять вместе без мальчика"></div>
   <div class="scene" id="scene">
    <svg class="landscape summer-landscape" viewBox="0 0 1200 675" preserveAspectRatio="none" aria-hidden="true">
     <defs><clipPath id="summer-water"><path d="M589 154Q556 176 454 199L465 225Q400 264 412 302Q421 343 373 389Q320 444 250 493Q203 533 186 555L286 623L265 675H1170L1100 603Q1010 550 925 499Q860 446 831 396Q810 350 794 309Q780 266 746 246L694 219L734 191Q683 166 618 154Z"/></clipPath></defs>
@@ -145,7 +159,7 @@ html,body{height:100%;overflow:hidden}.app{width:100%;height:100svh;min-height:0
    <div class="bank-label left">ОТПРАВЛЕНИЕ</div><div class="bank-label right">ДРУГОЙ БЕРЕГ</div>
    <div class="shore left" id="leftBank" aria-label="Левый берег"></div><div class="shore right" id="rightBank" aria-label="Правый берег"></div>
    <div class="chase-layer" id="chaseLayer" aria-hidden="true"></div>
-   <div class="boat" id="boat" aria-label="Лодка"><div class="boat-inner"><div class="crew" id="crew"></div><img class="boat-back" id="boatArtwork" src="assets/boat-boy-calm.webp" width="1200" height="600" alt="" aria-hidden="true" decoding="sync" draggable="false"><svg class="boat-hull" viewBox="0 0 1200 600" aria-hidden="true"><defs><clipPath id="frontBoatRim"><path d="M0 276L72 367C250 434 370 437 600 444C900 456 1044 428 1129 359L1200 290V600H0Z"/></clipPath></defs><image id="boatForeground" href="assets/boat-boy-calm.webp" width="1200" height="600" clip-path="url(#frontBoatRim)"/></svg></div><div class="boat-label" id="boatLabel"></div></div>
+   <div class="boat" id="boat" aria-label="Лодка"><div class="boat-inner"><div class="crew" id="crew"></div><img class="boat-back" id="boatArtwork" src="assets/boat-boy-calm.webp" width="1200" height="600" alt="" aria-hidden="true" decoding="sync" draggable="false"><svg class="boat-hull" viewBox="0 0 1200 600" aria-hidden="true"><defs><clipPath id="frontBoatRim"><path d="M0 276L72 357C230 419 415 425 600 432C820 443 1010 408 1129 349L1200 280V600H0Z"/></clipPath></defs><image id="boatForeground" href="assets/boat-boy-calm.webp" width="1200" height="600" clip-path="url(#frontBoatRim)"/></svg></div><div class="boat-label" id="boatLabel"></div></div>
   </div>
   <footer class="bottom"><button class="action" id="sail">Плывём →</button></footer>
   <section class="loss-panel" id="lossPanel" role="region" aria-labelledby="lossTitle" hidden><h2 id="lossTitle">Ой, не получилось!</h2><p id="lossReason"></p><div class="loss-actions"><button class="action" id="retry">Ещё раз</button><button class="tool" id="lossUndo">↶ Вернуть ход</button></div></section>
@@ -330,7 +344,7 @@ function render(){
  document.querySelector('.game').classList.toggle('lost',state.status==='lost');document.querySelector('.game').classList.toggle('losing',state.status==='losing');
  const c=level();document.querySelector('.game').style.setProperty('--cast-count',c.cast.length);$('levels').replaceChildren();
  LEVELS.forEach((config,index)=>{const b=document.createElement('button');b.type='button';b.className='level'+(index===levelIndex?' active':'')+(progress.includes(index)?' done':'');b.textContent=index+1;b.title=config.title;b.setAttribute('aria-label','Уровень '+(index+1)+': '+config.title);if(index===levelIndex)b.setAttribute('aria-current','step');b.disabled=busy;b.addEventListener('click',()=>startLevel(index));$('levels').append(b);});
- const label=document.createElement('div');label.className='level-title';label.innerHTML=c.title+'<small>'+c.subtitle+'</small>';$('levels').append(label);
+ const label=document.createElement('div');label.className='level-title';label.innerHTML=c.title+'<small>'+c.subtitle+'</small>';$('levelHeading').replaceChildren(label);
  $('capacity').textContent='Мест для пассажиров: '+c.capacity;
  $('counter').textContent='Рейсы: '+state.moves+((levelIndex>=2)?' / цель '+c.target:'');
  $('dangerList').innerHTML=c.pairs.map(([a,b],i)=>'<span class="danger-pill" role="img" aria-label="'+c.reasons[i]+'" title="'+c.reasons[i]+'">'+icon(c.cast[a][0])+'<span>×</span>'+icon(c.cast[b][0])+'</span>').join('');
