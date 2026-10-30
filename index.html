@@ -4,9 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Переправа — пять приключений</title>
-<link rel="preload" as="image" href="assets/wooden-boat-open.webp">
-<link rel="preload" as="image" href="assets/characters/boy-calm.webp">
-<link rel="preload" as="image" href="assets/characters/boy-panic.webp">
+<link rel="preload" as="image" href="assets/boat-boy-calm.webp">
+<link rel="preload" as="image" href="assets/boat-boy-panic.webp">
 <link rel="preload" as="image" href="assets/characters/fox.webp">
 <link rel="preload" as="image" href="assets/characters/hen.webp">
 <link rel="preload" as="image" href="assets/characters/grain.webp">
@@ -83,6 +82,14 @@ html,body{height:100%;overflow:hidden}.app{width:100%;height:100svh;min-height:0
 @media(max-width:680px){.shore{top:38%;width:28%;height:86px}.shore.left{left:1%}.shore.right{right:1%}}
 @media(max-height:650px) and (min-width:681px){.shore{height:90px}}
 @media(max-height:650px) and (max-width:680px){.shore{top:39%;height:72px}}
+/* Мальчик и лодка — одна цельная картинка; поверх добавляются только пассажиры. */
+.boat-back,.boat-hull{aspect-ratio:2/1}
+.crew{left:50%;right:10%;gap:5px;justify-content:center}
+.boat-reaction{display:none;position:absolute;left:30%;bottom:calc(var(--boat-art-height,210px)*.96);transform:translateX(-50%) rotate(-7deg);white-space:nowrap;background:#fff6e8;border:2px solid #e5c699;border-radius:13px;padding:5px 9px;color:#8d6444;font-size:15px;font-weight:850;z-index:3}
+.game.losing .boat-reaction,.game.lost .boat-reaction{display:block}
+@media(min-width:681px){.loss-panel{top:31%}}
+@media(max-height:650px) and (min-width:681px){.loss-panel{top:28%}}
+@media(max-width:680px){.boat-reaction{font-size:11px;padding:3px 6px}}
 </style>
 </head>
 <body>
@@ -113,7 +120,7 @@ html,body{height:100%;overflow:hidden}.app{width:100%;height:100svh;min-height:0
    <div class="bank-label left">ОТПРАВЛЕНИЕ</div><div class="bank-label right">ДРУГОЙ БЕРЕГ</div>
    <div class="shore left" id="leftBank" aria-label="Левый берег"></div><div class="shore right" id="rightBank" aria-label="Правый берег"></div>
    <div class="chase-layer" id="chaseLayer" aria-hidden="true"></div>
-   <div class="boat" id="boat" aria-label="Лодка"><div class="boat-inner"><div class="crew" id="crew"></div><img class="boat-back" src="assets/wooden-boat-open.webp" width="1100" height="285" alt="" aria-hidden="true" draggable="false"><svg class="boat-hull" viewBox="0 0 1100 285" aria-hidden="true"><defs><clipPath id="frontBoatRim"><path d="M0 0L40 82C170 149 330 165 550 161C810 166 960 128 1055 60L1100 0V285H0Z"/></clipPath></defs><image href="assets/wooden-boat-open.webp" width="1100" height="285" clip-path="url(#frontBoatRim)"/></svg></div><div class="boat-label" id="boatLabel"></div></div>
+   <div class="boat" id="boat" aria-label="Лодка"><div class="boat-inner"><div class="crew" id="crew"></div><img class="boat-back" id="boatArtwork" src="assets/boat-boy-calm.webp" width="1200" height="600" alt="" aria-hidden="true" decoding="sync" draggable="false"><svg class="boat-hull" viewBox="0 0 1200 600" aria-hidden="true"><defs><clipPath id="frontBoatRim"><path d="M0 276L72 367C250 434 370 437 600 444C900 456 1044 428 1129 359L1200 290V600H0Z"/></clipPath></defs><image id="boatForeground" href="assets/boat-boy-calm.webp" width="1200" height="600" clip-path="url(#frontBoatRim)"/></svg><span class="boat-reaction" aria-hidden="true">У-у-у!</span></div><div class="boat-label" id="boatLabel"></div></div>
   </div>
   <footer class="bottom"><div class="message" id="message" role="status" aria-live="polite"></div><button class="action" id="sail">Плывём →</button></footer>
   <section class="loss-panel" id="lossPanel" role="region" aria-labelledby="lossTitle" hidden><h2 id="lossTitle">Ой, не получилось!</h2><p id="lossReason"></p><div class="loss-actions"><button class="action" id="retry">Ещё раз</button><button class="tool" id="lossUndo">↶ Вернуть ход</button></div></section>
@@ -157,9 +164,12 @@ const $ = id => document.getElementById(id);
 let levelIndex=0, state, history=[], busy=false, highlighted=[], note='', animationToken=0;
 let soundEnabled=true,audioContext=null,soundNodes=[];
 const reducedMotion=()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-function driverIcon(panic){
- const pose=panic?'panic':'calm';
- return '<img class="driver-sprite" src="assets/characters/boy-'+pose+'.webp" width="640" height="640" alt="" aria-hidden="true" decoding="sync" draggable="false">';
+// Два цельных рисунка: мальчик уже нарисован сидящим в лодке.
+function setBoatPose(panic){
+ const src='assets/boat-boy-'+(panic?'panic':'calm')+'.webp';
+ if($('boatArtwork').getAttribute('src')!==src)$('boatArtwork').setAttribute('src',src);
+ if($('boatForeground').getAttribute('href')!==src)$('boatForeground').setAttribute('href',src);
+ $('boat').setAttribute('aria-label',panic?'Мальчик в лодке хватается за голову':'Мальчик сидит в лодке');
 }
 // Короткий комический возглас «у-у, ха-ха» из встроенного синтезатора.
 // Звук разблокируется нажатием «Плывём»; запись и внешние файлы не нужны.
@@ -275,7 +285,8 @@ function positionDocks(){
  if(!sceneBox.width||!sceneBox.height)return;
  // Размеры до покачивания сохраняют неподвижные точки причаливания.
  const width=hull.clientWidth,height=hull.clientHeight;
- boat.style.setProperty('--crew-bottom',(8+height*.39)+'px');
+ boat.style.setProperty('--crew-bottom',(8+height*.265)+'px');
+ boat.style.setProperty('--boat-art-height',height+'px');
  const hullTop=boat.offsetTop+boat.offsetHeight/2-parseFloat(getComputedStyle(hull).bottom)-height;
  function bankAt(y,side){
   const row=Math.max(RIVER_BANKS[0][0],Math.min(RIVER_BANKS[RIVER_BANKS.length-1][0],y));
@@ -284,9 +295,9 @@ function positionDocks(){
   return (a[side]+(b[side]-a[side])*t)*sceneBox.width;
  }
  // У новой лодки корма слева чуть ниже носа справа.
- const leftBank=bankAt((hullTop+height*.08)/sceneBox.height,1);
- const rightBank=bankAt((hullTop+height*.05)/sceneBox.height,2);
- const halfHull=width/2,contact=Math.max(12,Math.min(38,width*.09));
+ const leftBank=bankAt((hullTop+height*.49)/sceneBox.height,1);
+ const rightBank=bankAt((hullTop+height*.50)/sceneBox.height,2);
+ const halfHull=width*.478,contact=Math.max(12,Math.min(38,width*.09));
  scene.style.setProperty('--dock-left',(leftBank+halfHull-contact)+'px');
  scene.style.setProperty('--dock-right',(rightBank-halfHull+contact)+'px');
 }
@@ -305,7 +316,7 @@ function render(){
  c.cast.forEach((_,i)=>{if(!state.selected.includes(i))$(state.positions[i]===0?'leftBank':'rightBank').append(makePassenger(i));});
  $('boat').classList.toggle('right',state.boat===1);
  const panic=state.status==='losing'||state.status==='lost';
- $('crew').innerHTML='<span class="driver'+(panic?' panic':'')+'" role="img" aria-label="'+(panic?'Мальчик хватается за голову':'Мальчик — перевозчик')+'">'+driverIcon(panic)+'</span>';
+ setBoatPose(panic);$('crew').replaceChildren();
  for(let slot=0;slot<c.capacity;slot++){
   const i=state.selected[slot],b=document.createElement('button');b.type='button';b.className='seat '+(i===undefined?'empty':'filled');
   b.innerHTML=i===undefined?'+':icon(c.cast[i][0]);b.disabled=i===undefined||busy||state.status!=='idle';
