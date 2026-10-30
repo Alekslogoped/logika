@@ -77,7 +77,7 @@ html,body{height:100%;overflow:hidden}.app{width:100%;height:100svh;min-height:0
 /* Пассажиры стоят одним рядом на сухой части каждого берега. */
 .shore{top:39%;height:132px;width:25%;max-height:none;grid-template-columns:repeat(var(--cast-count,3),minmax(0,1fr));grid-template-rows:minmax(0,1fr);align-items:end;gap:2px;padding:0}
 .shore .passenger{height:100%;max-height:none;justify-content:flex-end;border-radius:0;padding:0;min-width:0}
-.shore .passenger .emoji{font-size:clamp(22px,calc(20vw / var(--cast-count,3)),88px)}
+.shore .passenger .emoji{font-size:clamp(27px,calc(24.5vw / var(--cast-count,3)),108px)}
 .shore .passenger .name{font-size:clamp(7px,1.1vw,14px);padding:3px 2px;white-space:nowrap}
 @media(max-width:680px){.shore{top:38%;width:28%;height:86px}.shore.left{left:1%}.shore.right{right:1%}}
 @media(max-height:650px) and (min-width:681px){.shore{height:90px}}
@@ -85,14 +85,16 @@ html,body{height:100%;overflow:hidden}.app{width:100%;height:100svh;min-height:0
 /* Мальчик и лодка — одна цельная картинка; поверх добавляются только пассажиры. */
 .boat-back,.boat-hull{aspect-ratio:2/1}
 .crew{left:50%;right:10%;gap:5px;justify-content:center}
-.boat-reaction{display:none;position:absolute;left:30%;bottom:calc(var(--boat-art-height,210px)*.96);transform:translateX(-50%) rotate(-7deg);white-space:nowrap;background:#fff6e8;border:2px solid #e5c699;border-radius:13px;padding:5px 9px;color:#8d6444;font-size:15px;font-weight:850;z-index:3}
-.game.losing .boat-reaction,.game.lost .boat-reaction{display:block}
 @media(min-width:681px){.loss-panel{top:31%}}
 @media(max-height:650px) and (min-width:681px){.loss-panel{top:28%}}
-@media(max-width:680px){.boat-reaction{font-size:11px;padding:3px 6px}}
 /* Блокировка на время плавания не меняет видимость пассажиров. */
 .seat.filled,.seat.filled:disabled{opacity:1}
-.seat.filled .painted-icon{width:1.2em;height:1.2em;flex-shrink:0}
+.seat.filled .painted-icon{width:1.44em;height:1.44em;flex-shrink:0}
+/* Ещё крупнее на обоих берегах и в пассажирских местах. */
+.crew{left:45%;right:5%;gap:10px}
+.seat.filled{width:clamp(56px,6.3vw,92px);height:clamp(58px,6.4vw,92px)}
+@media(min-width:681px){.shore{top:calc(39% - 24px);height:156px}}
+@media(max-height:650px) and (min-width:681px){.shore{height:114px}}
 </style>
 </head>
 <body>
@@ -123,7 +125,7 @@ html,body{height:100%;overflow:hidden}.app{width:100%;height:100svh;min-height:0
    <div class="bank-label left">ОТПРАВЛЕНИЕ</div><div class="bank-label right">ДРУГОЙ БЕРЕГ</div>
    <div class="shore left" id="leftBank" aria-label="Левый берег"></div><div class="shore right" id="rightBank" aria-label="Правый берег"></div>
    <div class="chase-layer" id="chaseLayer" aria-hidden="true"></div>
-   <div class="boat" id="boat" aria-label="Лодка"><div class="boat-inner"><div class="crew" id="crew"></div><img class="boat-back" id="boatArtwork" src="assets/boat-boy-calm.webp" width="1200" height="600" alt="" aria-hidden="true" decoding="sync" draggable="false"><svg class="boat-hull" viewBox="0 0 1200 600" aria-hidden="true"><defs><clipPath id="frontBoatRim"><path d="M0 276L72 367C250 434 370 437 600 444C900 456 1044 428 1129 359L1200 290V600H0Z"/></clipPath></defs><image id="boatForeground" href="assets/boat-boy-calm.webp" width="1200" height="600" clip-path="url(#frontBoatRim)"/></svg><span class="boat-reaction" aria-hidden="true">У-у-у!</span></div><div class="boat-label" id="boatLabel"></div></div>
+   <div class="boat" id="boat" aria-label="Лодка"><div class="boat-inner"><div class="crew" id="crew"></div><img class="boat-back" id="boatArtwork" src="assets/boat-boy-calm.webp" width="1200" height="600" alt="" aria-hidden="true" decoding="sync" draggable="false"><svg class="boat-hull" viewBox="0 0 1200 600" aria-hidden="true"><defs><clipPath id="frontBoatRim"><path d="M0 276L72 367C250 434 370 437 600 444C900 456 1044 428 1129 359L1200 290V600H0Z"/></clipPath></defs><image id="boatForeground" href="assets/boat-boy-calm.webp" width="1200" height="600" clip-path="url(#frontBoatRim)"/></svg></div><div class="boat-label" id="boatLabel"></div></div>
   </div>
   <footer class="bottom"><div class="message" id="message" role="status" aria-live="polite"></div><button class="action" id="sail">Плывём →</button></footer>
   <section class="loss-panel" id="lossPanel" role="region" aria-labelledby="lossTitle" hidden><h2 id="lossTitle">Ой, не получилось!</h2><p id="lossReason"></p><div class="loss-actions"><button class="action" id="retry">Ещё раз</button><button class="tool" id="lossUndo">↶ Вернуть ход</button></div></section>
