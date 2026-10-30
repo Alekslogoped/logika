@@ -95,12 +95,17 @@ html,body{height:100%;overflow:hidden}.app{width:100%;height:100svh;min-height:0
 .seat.filled{width:clamp(56px,6.3vw,92px);height:clamp(58px,6.4vw,92px)}
 @media(min-width:681px){.shore{top:calc(39% - 24px);height:156px}}
 @media(max-height:650px) and (min-width:681px){.shore{height:114px}}
+/* На поле остаются только управление и игровые показатели. */
+.top{justify-content:flex-end}
+.bottom{justify-content:flex-end;align-items:flex-end}
+.shore .passenger{padding-bottom:24px}
+@media(max-width:680px){.shore .passenger{padding-bottom:18px}}
 </style>
 </head>
 <body>
 <main class="app">
  <section class="game" aria-label="Игровое поле">
- <header class="top"><div class="brand">Переправа <small>Пять маленьких приключений</small></div><div class="tools"><button class="tool" id="undo" title="Отменить последнюю переправу">↶ Ход</button><button class="tool" id="reset">↻ Сначала</button><button class="tool" id="rules">? Правила</button><button class="tool" id="sound" aria-label="Выключить звук" aria-pressed="true"><svg class="sound-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9H7L12 5V19L7 15H3Z"/><path class="sound-waves" d="M16 8Q20 12 16 16M19 5Q26 12 19 19"/></svg><span class="sound-label">Звук</span></button><button class="tool hint-button" id="hint">Подсказка</button></div></header>
+ <header class="top"><div class="tools"><button class="tool" id="undo" title="Отменить последнюю переправу">↶ Ход</button><button class="tool" id="reset">↻ Сначала</button><button class="tool" id="rules">? Правила</button><button class="tool" id="sound" aria-label="Выключить звук" aria-pressed="true"><svg class="sound-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9H7L12 5V19L7 15H3Z"/><path class="sound-waves" d="M16 8Q20 12 16 16M19 5Q26 12 19 19"/></svg><span class="sound-label">Звук</span></button></div></header>
  <nav class="levels" id="levels" aria-label="Уровни"></nav>
   <div class="game-info"><div class="trip-info"><span class="badge" id="capacity"></span><span class="badge" id="counter"></span></div><div class="danger-list" id="dangerList" aria-label="Нельзя оставлять вместе без мальчика"></div></div>
   <div class="scene" id="scene">
@@ -127,7 +132,7 @@ html,body{height:100%;overflow:hidden}.app{width:100%;height:100svh;min-height:0
    <div class="chase-layer" id="chaseLayer" aria-hidden="true"></div>
    <div class="boat" id="boat" aria-label="Лодка"><div class="boat-inner"><div class="crew" id="crew"></div><img class="boat-back" id="boatArtwork" src="assets/boat-boy-calm.webp" width="1200" height="600" alt="" aria-hidden="true" decoding="sync" draggable="false"><svg class="boat-hull" viewBox="0 0 1200 600" aria-hidden="true"><defs><clipPath id="frontBoatRim"><path d="M0 276L72 367C250 434 370 437 600 444C900 456 1044 428 1129 359L1200 290V600H0Z"/></clipPath></defs><image id="boatForeground" href="assets/boat-boy-calm.webp" width="1200" height="600" clip-path="url(#frontBoatRim)"/></svg></div><div class="boat-label" id="boatLabel"></div></div>
   </div>
-  <footer class="bottom"><div class="message" id="message" role="status" aria-live="polite"></div><button class="action" id="sail">Плывём →</button></footer>
+  <footer class="bottom"><button class="action" id="sail">Плывём →</button></footer>
   <section class="loss-panel" id="lossPanel" role="region" aria-labelledby="lossTitle" hidden><h2 id="lossTitle">Ой, не получилось!</h2><p id="lossReason"></p><div class="loss-actions"><button class="action" id="retry">Ещё раз</button><button class="tool" id="lossUndo">↶ Вернуть ход</button></div></section>
  </section>
 </main>
@@ -207,7 +212,7 @@ async function chasePair(pair,animate=true){
   const original=$('scene').querySelector('[data-passenger="'+i+'"]');if(!original)return null;
   const rect=original.querySelector('.emoji svg').getBoundingClientRect(),actor=document.createElement('div');
   actor.className='chase-actor '+role;actor.dataset.actor=i;actor.style.cssText='left:'+(rect.left-sceneRect.left)+'px;top:'+(rect.top-sceneRect.top)+'px;width:'+rect.width+'px;height:'+rect.height+'px;font-size:'+rect.width+'px';
-  actor.innerHTML='<div class="runner">'+icon(level().cast[i][0])+'</div><span class="name">'+level().cast[i][1]+'</span>';layer.append(actor);original.style.visibility='hidden';return {actor,rect};
+  actor.innerHTML='<div class="runner">'+icon(level().cast[i][0])+'</div>';layer.append(actor);original.style.visibility='hidden';return {actor,rect};
  };
  const target=makeActor(pair[1],'target'),runner=makeActor(pair[0],'attacker');if(!target||!runner)return;
  const dx=target.rect.left-runner.rect.left,dy=target.rect.top-runner.rect.top,distance=Math.hypot(dx,dy)||1;
@@ -269,17 +274,8 @@ function makePassenger(index){
  if(state.status==='error'&&unsafePairs(state.positions,state.boat,level()).some(p=>p.includes(index)))button.classList.add('danger');
  if(state.positions[index]===1)button.classList.add('arrived');
  button.setAttribute('aria-label',name+(button.disabled?' — на другом берегу':' — посадить в лодку'));
- button.innerHTML='<span class="emoji" aria-hidden="true">'+icon(emoji)+'</span><span class="name">'+name+'</span>';
+ button.innerHTML='<span class="emoji" aria-hidden="true">'+icon(emoji)+'</span>';
  button.addEventListener('click',()=>togglePassenger(index));return button;
-}
-function defaultMessage(){
- if(state.status==='won')return 'Все на другом берегу! Отличная работа.';
- if(state.status==='losing')return 'Ой-ой! Посмотри, кто остался без присмотра!';
- if(state.status==='lost')return 'Переправа не удалась. Попробуй ещё раз или верни ход.';
- if(busy)return 'Плывём… Посмотри, кто остался на берегу.';
- if(levelIndex===0&&state.moves===0&&!state.selected.length)return 'Начни с курицы: нажми на неё, а затем на «Плывём».';
- if(state.selected.length)return 'В лодке: '+state.selected.map(i=>level().cast[i][1].toLowerCase()).join(', ')+'. Можно отправляться!';
- return state.boat===1?'Кого заберём обратно? Можно вернуться одному.':'Выбери пассажира. Мальчик может плыть и один.';
 }
 // Контур берегов на летнем фоне: нормализованные координаты y, левый и правый берег.
 const RIVER_BANKS=[[0.35,0.3882,0.5879],[0.36,0.3882,0.6041],[0.37,0.3852,0.6322],[0.38,0.3882,0.6429],[0.39,0.387,0.6651],[0.4,0.3792,0.6687],[0.41,0.3589,0.6663],[0.42,0.3547,0.6722],[0.43,0.3289,0.6824],[0.44,0.323,0.6932],[0.45,0.3062,0.6914],[0.46,0.3152,0.6854],[0.47,0.3236,0.6806],[0.48,0.326,0.6794],[0.49,0.3278,0.6812],[0.5,0.3283,0.6842],[0.51,0.3283,0.683],[0.52,0.3218,0.6794],[0.53,0.3224,0.6866],[0.54,0.3248,0.6998],[0.55,0.3272,0.7004],[0.56,0.3146,0.7057],[0.57,0.317,0.7267],[0.58,0.3044,0.7327],[0.59,0.3074,0.7512],[0.6,0.3008,0.75],[0.61,0.2626,0.7542],[0.62,0.262,0.7518],[0.63,0.2506,0.75],[0.64,0.2524,0.7584],[0.65,0.2536,0.7715],[0.66,0.2476,0.7715],[0.67,0.2398,0.7847],[0.68,0.2416,0.7972],[0.69,0.2416,0.7871],[0.7,0.2291,0.7949],[0.71,0.1986,0.7943],[0.72,0.1974,0.7919],[0.73,0.1788,0.8038],[0.74,0.1788,0.8158],[0.75,0.1711,0.8164],[0.76,0.1728,0.8283],[0.77,0.1722,0.8397],[0.78,0.1579,0.8559],[0.79,0.1256,0.8553],[0.8,0.1094,0.8541],[0.81,0.1077,0.863],[0.82,0.0969,0.8929],[0.83,0.1029,0.9055],[0.84,0.1059,0.9043],[0.85,0.1112,0.9013],[0.86,0.1232,0.8989],[0.87,0.0861,0.9031],[0.88,0.113,0.9169],[0.89,0.1364,0.9252],[0.9,0.1202,0.9516]];
@@ -330,16 +326,11 @@ function render(){
  }
  positionDocks();
  $('boatLabel').textContent=busy?'Переправа…':state.selected.length+' / '+c.capacity+' пассажиров';
- $('message').textContent=note||defaultMessage();
  $('undo').disabled=busy||!history.length;
  $('reset').disabled=busy;$('rules').disabled=busy;
  $('sail').disabled=busy;
  $('sail').hidden=state.status==='lost';
  $('sail').textContent=state.status==='won'?(levelIndex===4?'Ещё раз':'Дальше →'):(state.boat===0?'Плывём →':'← Плывём');
- $('hint').hidden=levelIndex!==0;$('hint').disabled=busy||state.status!=='idle';
- if(levelIndex===0&&state.moves===0&&!state.selected.length&&state.status==='idle'){
-  const chicken=$('leftBank').querySelector('[data-passenger="1"]');if(chicken)chicken.classList.add('hint');
- }
  if(state.status==='lost'&&state.attack){$('lossReason').textContent=failureReason(state.attack);chasePair(state.attack,false);}
 }
 async function sail(){
@@ -372,12 +363,6 @@ function showRules(){
  const c=level();$('rulesBody').innerHTML='<p class="rule-line">Перевези всех на правый берег. Нажми на пассажира для посадки, затем на «Плывём». Повторный клик высаживает пассажира.</p><p class="rule-line">В лодке мальчик и <b>'+c.capacity+(c.capacity===1?' пассажир':' пассажира')+'</b>. Можно плыть одному и возвращать пассажиров обратно.</p><p class="rule-line"><b>Без мальчика нельзя оставлять вместе:</b></p>'+c.pairs.map(([a,b],i)=>'<div class="rule-pair"><span class="icons">'+icon(c.cast[a][0])+' '+icon(c.cast[b][0])+'</span><span class="explain">'+c.reasons[i]+'</span></div>').join('')+'<p class="rule-line">В присутствии мальчика все в безопасности — и на берегу, и в лодке. Если кто-то остался без присмотра, он подбежит к соседу — игра закончится. Попробуй ещё раз или нажми «Вернуть ход».</p>'+(levelIndex>=2?'<p class="rule-line">Попробуй пройти за <b>'+c.target+' рейсов</b>. Возвращение тоже считается. Если рейсов больше, всё равно можно закончить игру.</p>':'');
  $('rulesDialog').showModal();
 }
-function showHint(){
- if(busy||state.status!=='idle')return;
- const route=findRoute(state.positions,state.boat,level());if(!route||!route.length)return;
- const next=route[0];highlighted=next;
- note=next.length?'Следующим рейсом возьми: '+next.map(i=>level().cast[i][1].toLowerCase()).join(' и ')+'.':'Следующим рейсом мальчик плывёт один.';render();
-}
 function showWin(){
  const optimal=state.moves===level().target;
  $('resultTitle').textContent=levelIndex===4&&progress.length===5?'Все пять пройдены!':'Молодец!';
@@ -387,7 +372,7 @@ function showWin(){
  $('resultDialog').showModal();
  for(let i=0;i<28;i++){const piece=document.createElement('i');piece.className='confetti';piece.style.left=(Math.random()*100)+'%';piece.style.background=['#86b4c9','#e9be7a','#c0abd5','#8fbfa9'][i%4];piece.style.animationDelay=(Math.random()*.5)+'s';$('scene').append(piece);setTimeout(()=>piece.remove(),3400);}
 }
-$('sail').addEventListener('click',sail);$('undo').addEventListener('click',undo);$('reset').addEventListener('click',()=>startLevel(levelIndex));$('rules').addEventListener('click',showRules);$('hint').addEventListener('click',showHint);$('replay').addEventListener('click',()=>startLevel(levelIndex));$('next').addEventListener('click',()=>startLevel(levelIndex===4?0:levelIndex+1));
+$('sail').addEventListener('click',sail);$('undo').addEventListener('click',undo);$('reset').addEventListener('click',()=>startLevel(levelIndex));$('rules').addEventListener('click',showRules);$('replay').addEventListener('click',()=>startLevel(levelIndex));$('next').addEventListener('click',()=>startLevel(levelIndex===4?0:levelIndex+1));
 $('sound').addEventListener('click',toggleSound);$('retry').addEventListener('click',()=>startLevel(levelIndex));$('lossUndo').addEventListener('click',undo);
 document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>$(b.dataset.close).close()));
 startLevel(0);
