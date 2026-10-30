@@ -57,10 +57,10 @@ html,body{height:100%;overflow:hidden}.app{width:100%;height:100svh;min-height:0
 .boat{width:clamp(270px,31vw,420px);height:180px}
 .boat-hull{height:auto;aspect-ratio:1100/285;z-index:2;filter:none}
 .crew{bottom:clamp(62px,5.7vw,82px);left:7%;right:7%;z-index:1}
-.driver{font-size:clamp(60px,7vw,96px)}
-@media(max-width:680px){.boat{width:220px;height:145px}.crew{bottom:43px;left:4%;right:4%}.driver{font-size:56px}}
-@media(max-height:650px) and (min-width:681px){.boat{width:270px;height:145px}.crew{bottom:53px}.driver{font-size:64px}}
-@media(max-height:650px) and (max-width:680px){.boat{width:204px;height:126px}.crew{bottom:40px}.driver{font-size:48px}}
+.driver{font-size:clamp(75px,8.8vw,120px)}
+@media(max-width:680px){.boat{width:220px;height:145px}.crew{bottom:43px;left:4%;right:4%}.driver{font-size:70px}}
+@media(max-height:650px) and (min-width:681px){.boat{width:270px;height:145px}.crew{bottom:53px}.driver{font-size:80px}}
+@media(max-height:650px) and (max-width:680px){.boat{width:204px;height:126px}.crew{bottom:40px}.driver{font-size:60px}}
 @media(min-width:681px){.loss-panel{top:35%}}
 @media(max-height:650px) and (min-width:681px){.loss-panel{top:31%}}
 /* Герои без прямоугольных подложек при наведении, подсказке и посадке. */
@@ -75,6 +75,14 @@ html,body{height:100%;overflow:hidden}.app{width:100%;height:100svh;min-height:0
 .boat-back{position:absolute;bottom:8px;width:100%;height:auto;aspect-ratio:1100/285;z-index:0;filter:drop-shadow(0 7px 3px #2d6a8d22);pointer-events:none}
 .crew{bottom:var(--crew-bottom,50px)}
 .driver{margin-bottom:-.1em}
+/* Пассажиры стоят одним рядом на сухой части каждого берега. */
+.shore{top:39%;height:132px;width:25%;max-height:none;grid-template-columns:repeat(var(--cast-count,3),minmax(0,1fr));grid-template-rows:minmax(0,1fr);align-items:end;gap:2px;padding:0}
+.shore .passenger{height:100%;max-height:none;justify-content:flex-end;border-radius:0;padding:0;min-width:0}
+.shore .passenger .emoji{font-size:clamp(22px,calc(20vw / var(--cast-count,3)),88px)}
+.shore .passenger .name{font-size:clamp(7px,1.1vw,14px);padding:3px 2px;white-space:nowrap}
+@media(max-width:680px){.shore{top:38%;width:28%;height:86px}.shore.left{left:1%}.shore.right{right:1%}}
+@media(max-height:650px) and (min-width:681px){.shore{height:90px}}
+@media(max-height:650px) and (max-width:680px){.shore{top:39%;height:72px}}
 </style>
 </head>
 <body>
@@ -240,7 +248,7 @@ function togglePassenger(index){
 function makePassenger(index){
  const [emoji,name]=level().cast[index],button=document.createElement('button');
  button.type='button';button.className='passenger';button.dataset.passenger=index;
- button.style.gridArea=(Math.floor(index/2)+1)+' / '+((index%2)+1);
+ button.style.gridArea='1 / '+(index+1);
  button.disabled=busy||state.status!=='idle'||state.positions[index]!==state.boat;
  if(highlighted.includes(index))button.classList.add('hint');
  if(state.status==='error'&&unsafePairs(state.positions,state.boat,level()).some(p=>p.includes(index)))button.classList.add('danger');
@@ -278,7 +286,7 @@ function positionDocks(){
  // У новой лодки корма слева чуть ниже носа справа.
  const leftBank=bankAt((hullTop+height*.08)/sceneBox.height,1);
  const rightBank=bankAt((hullTop+height*.05)/sceneBox.height,2);
- const halfHull=width/2,contact=3;
+ const halfHull=width/2,contact=Math.max(12,Math.min(38,width*.09));
  scene.style.setProperty('--dock-left',(leftBank+halfHull-contact)+'px');
  scene.style.setProperty('--dock-right',(rightBank-halfHull+contact)+'px');
 }
@@ -287,7 +295,7 @@ function render(){
  document.querySelector('.game').classList.toggle('sailing',busy);
  $('chaseLayer').replaceChildren();$('lossPanel').hidden=state.status!=='lost';
  document.querySelector('.game').classList.toggle('lost',state.status==='lost');document.querySelector('.game').classList.toggle('losing',state.status==='losing');
- const c=level();$('levels').replaceChildren();
+ const c=level();document.querySelector('.game').style.setProperty('--cast-count',c.cast.length);$('levels').replaceChildren();
  LEVELS.forEach((config,index)=>{const b=document.createElement('button');b.type='button';b.className='level'+(index===levelIndex?' active':'')+(progress.includes(index)?' done':'');b.textContent=index+1;b.title=config.title;b.setAttribute('aria-label','Уровень '+(index+1)+': '+config.title);if(index===levelIndex)b.setAttribute('aria-current','step');b.disabled=busy;b.addEventListener('click',()=>startLevel(index));$('levels').append(b);});
  const label=document.createElement('div');label.className='level-title';label.innerHTML=c.title+'<small>'+c.subtitle+'</small>';$('levels').append(label);
  $('capacity').textContent='Мест для пассажиров: '+c.capacity;
