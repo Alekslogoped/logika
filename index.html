@@ -90,6 +90,9 @@ html,body{height:100%;overflow:hidden}.app{width:100%;height:100svh;min-height:0
 @media(min-width:681px){.loss-panel{top:31%}}
 @media(max-height:650px) and (min-width:681px){.loss-panel{top:28%}}
 @media(max-width:680px){.boat-reaction{font-size:11px;padding:3px 6px}}
+/* Блокировка на время плавания не меняет видимость пассажиров. */
+.seat.filled,.seat.filled:disabled{opacity:1}
+.seat.filled .painted-icon{width:1.2em;height:1.2em;flex-shrink:0}
 </style>
 </head>
 <body>
