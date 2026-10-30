@@ -297,7 +297,7 @@ function positionDocks(){
  // У новой лодки корма слева чуть ниже носа справа.
  const leftBank=bankAt((hullTop+height*.49)/sceneBox.height,1);
  const rightBank=bankAt((hullTop+height*.50)/sceneBox.height,2);
- const halfHull=width*.478,contact=Math.max(12,Math.min(38,width*.09));
+ const halfHull=width*.478,contact=Math.max(24,Math.min(72,width*.17));
  scene.style.setProperty('--dock-left',(leftBank+halfHull-contact)+'px');
  scene.style.setProperty('--dock-right',(rightBank-halfHull+contact)+'px');
 }
