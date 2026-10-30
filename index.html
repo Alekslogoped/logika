@@ -100,6 +100,21 @@ html,body{height:100%;overflow:hidden}.app{width:100%;height:100svh;min-height:0
 .bottom{justify-content:flex-end;align-items:flex-end}
 .shore .passenger{padding-bottom:24px}
 @media(max-width:680px){.shore .passenger{padding-bottom:18px}}
+/* Кнопки приключений подняты в верхний ряд. */
+.levels{top:18px;right:auto;width:max-content;max-width:calc(100% - 480px);gap:10px;flex-wrap:nowrap}
+.level{display:grid;place-items:center;flex:0 0 50px;width:50px;height:50px;min-width:0;padding:0;border:2px solid #fff9;border-radius:17px;background:linear-gradient(155deg,#fffef4,#d9edbe);color:#365c51;font-size:21px;font-weight:850;box-shadow:0 4px 0 #628c5266,0 7px 15px #29482d1c,inset 0 1px 0 #fff;transition:transform .15s,box-shadow .15s,background .15s}
+.level:hover:not(:disabled){background:linear-gradient(155deg,#fff,#eaffc8);transform:translateY(-2px)}
+.level.active,.level.active:hover:not(:disabled){background:linear-gradient(150deg,#4589ab,#244c73);color:#fff;border-color:#c1f1ff;box-shadow:0 4px 0 #183a58,0 0 0 3px #ffffff4d,0 7px 15px #29482d26}
+.level:not(:disabled):active{transform:translateY(3px);box-shadow:0 1px 0 #628c5266}
+.level.done::after{right:-5px;top:-6px;width:19px;height:19px;font-size:11px}
+.level-title{position:absolute;left:0;top:65px;margin:0;white-space:nowrap}
+/* Размеры учитывают, что хищники крупнее своих попутчиков. */
+.shore .passenger .emoji{font-size:calc(clamp(27px,calc(24.5vw / var(--cast-count,3)),108px) * var(--character-scale,1))}
+.seat.filled .painted-icon{width:calc(1.44em * var(--character-scale,1));height:calc(1.44em * var(--character-scale,1))}
+@media(max-width:900px){.levels{top:66px;max-width:none}.level-title{position:static;margin-left:6px}.game-info{top:134px}}
+@media(max-width:680px){.levels{top:53px;left:12px;right:12px;width:auto;gap:8px;flex-wrap:wrap}.level{flex-basis:39px;width:39px;height:39px;border-radius:13px;font-size:18px}.level-title{flex-basis:100%;margin:2px 0 0;padding:4px 8px}.game-info{top:142px}}
+@media(max-height:650px) and (min-width:901px){.levels{top:10px}.level{width:43px;height:43px;flex-basis:43px;border-radius:14px;font-size:19px}.level-title{top:55px}.game-info{top:110px}}
+@media(max-height:650px) and (max-width:680px){.levels{top:47px;gap:6px}.level{width:34px;height:34px;flex-basis:34px;border-radius:11px;font-size:16px}.level-title{margin-top:0}.game-info{top:117px}}
 </style>
 </head>
 <body>
@@ -165,9 +180,12 @@ const ART={
 };
 // Каждый герой и предмет — самостоятельная картинка с прозрачным фоном.
 const CHARACTER_FILES={'🦊':'fox','🐔':'hen','🌾':'grain','🐱':'cat','🐭':'mouse','🧀':'cheese','🐰':'rabbit-gray','🥕':'carrot','🐺':'wolf'};
-function icon(emoji){
- const file=CHARACTER_FILES[emoji];
- if(file)return '<svg class="painted-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em" style="vertical-align:middle;overflow:visible" aria-hidden="true"><image href="assets/characters/'+file+'.webp" x="0" y="0" width="512" height="512" preserveAspectRatio="xMidYMid meet"/></svg>';
+const CHARACTER_SCALES={'🦊':1.24,'🐱':1.24,'🐺':1.36};
+// Лиса в исходнике смотрит влево; остальные животные — вправо.
+const characterFacing=(emoji,direction)=>['🦊','🐱','🐺','🐔','🐭','🐰'].includes(emoji)?direction*(emoji==='🦊'?-1:1):1;
+function icon(emoji,direction=null){
+ const file=CHARACTER_FILES[emoji],facing=direction===null?1:characterFacing(emoji,direction);
+ if(file)return '<svg class="painted-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em" style="vertical-align:middle;overflow:visible;transform:scaleX('+facing+')" aria-hidden="true"><image href="assets/characters/'+file+'.webp" x="0" y="0" width="512" height="512" preserveAspectRatio="xMidYMid meet"/></svg>';
  return ART[emoji]?'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="1em" height="1em" style="vertical-align:middle" aria-hidden="true">'+ART[emoji]+'</svg>':emoji;
 }
 const $ = id => document.getElementById(id);
@@ -212,11 +230,13 @@ async function chasePair(pair,animate=true){
   const original=$('scene').querySelector('[data-passenger="'+i+'"]');if(!original)return null;
   const rect=original.querySelector('.emoji svg').getBoundingClientRect(),actor=document.createElement('div');
   actor.className='chase-actor '+role;actor.dataset.actor=i;actor.style.cssText='left:'+(rect.left-sceneRect.left)+'px;top:'+(rect.top-sceneRect.top)+'px;width:'+rect.width+'px;height:'+rect.height+'px;font-size:'+rect.width+'px';
-  actor.innerHTML='<div class="runner">'+icon(level().cast[i][0])+'</div>';layer.append(actor);original.style.visibility='hidden';return {actor,rect};
+  actor.innerHTML='<div class="runner">'+original.querySelector('.emoji svg').outerHTML+'</div>';layer.append(actor);original.style.visibility='hidden';return {actor,rect};
  };
  const target=makeActor(pair[1],'target'),runner=makeActor(pair[0],'attacker');if(!target||!runner)return;
- const dx=target.rect.left-runner.rect.left,dy=target.rect.top-runner.rect.top,distance=Math.hypot(dx,dy)||1;
- const stopAt=Math.min(runner.rect.width*.82,distance*.48),x=dx*(1-stopAt/distance),y=dy*(1-stopAt/distance);
+ const dx=target.rect.left+target.rect.width/2-runner.rect.left-runner.rect.width/2,dy=target.rect.top+target.rect.height/2-runner.rect.top-runner.rect.height/2,distance=Math.hypot(dx,dy)||1;
+ // Поворот относится только к картинке: движение и подскоки не сбрасывают его.
+ runner.actor.querySelector('svg').style.transform='scaleX('+characterFacing(level().cast[pair[0]][0],dx>=0?1:-1)+')';
+ const stopAt=Math.min((runner.rect.width+target.rect.width)*.36,distance*.48),x=dx*(1-stopAt/distance),y=dy*(1-stopAt/distance);
  const pose='translate('+x+'px,'+y+'px)';
  const puff=()=>{const p=document.createElement('div');p.className='chase-puff';p.style.left=(target.rect.left-sceneRect.left+target.rect.width*.35)+'px';p.style.top=(target.rect.top-sceneRect.top+target.rect.height*.6)+'px';layer.append(p);};
  if(!animate||reducedMotion()){runner.actor.style.transform=pose;puff();return;}
@@ -269,12 +289,13 @@ function makePassenger(index){
  const [emoji,name]=level().cast[index],button=document.createElement('button');
  button.type='button';button.className='passenger';button.dataset.passenger=index;
  button.style.gridArea='1 / '+(index+1);
+ button.style.setProperty('--character-scale',CHARACTER_SCALES[emoji]||1);
  button.disabled=busy||state.status!=='idle'||state.positions[index]!==state.boat;
  if(highlighted.includes(index))button.classList.add('hint');
  if(state.status==='error'&&unsafePairs(state.positions,state.boat,level()).some(p=>p.includes(index)))button.classList.add('danger');
  if(state.positions[index]===1)button.classList.add('arrived');
  button.setAttribute('aria-label',name+(button.disabled?' — на другом берегу':' — посадить в лодку'));
- button.innerHTML='<span class="emoji" aria-hidden="true">'+icon(emoji)+'</span>';
+ button.innerHTML='<span class="emoji" aria-hidden="true">'+icon(emoji,state.positions[index]===0?1:-1)+'</span>';
  button.addEventListener('click',()=>togglePassenger(index));return button;
 }
 // Контур берегов на летнем фоне: нормализованные координаты y, левый и правый берег.
@@ -320,7 +341,8 @@ function render(){
  setBoatPose(panic);$('crew').replaceChildren();
  for(let slot=0;slot<c.capacity;slot++){
   const i=state.selected[slot],b=document.createElement('button');b.type='button';b.className='seat '+(i===undefined?'empty':'filled');
-  b.innerHTML=i===undefined?'+':icon(c.cast[i][0]);b.disabled=i===undefined||busy||state.status!=='idle';
+  if(i!==undefined)b.style.setProperty('--character-scale',CHARACTER_SCALES[c.cast[i][0]]||1);
+  b.innerHTML=i===undefined?'+':icon(c.cast[i][0],state.boat===0?1:-1);b.disabled=i===undefined||busy||state.status!=='idle';
   b.setAttribute('aria-label',i===undefined?'Свободное место':c.cast[i][1]+' — высадить из лодки');
   if(i!==undefined)b.addEventListener('click',()=>togglePassenger(i));$('crew').append(b);
  }
